@@ -4210,7 +4210,7 @@ def ignore_trade():
         return jsonify({"success": False, "error": str(e)})
 
 
-def run_web_server(host='0.0.0.0', port=5000, debug=False):
+def run_web_server(host='0.0.0.0', port=5001, debug=False):
     """启动Web服务器"""
     # 初始化日志系统
     from utils.log_config import LogConfig
