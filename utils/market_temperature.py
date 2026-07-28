@@ -13,7 +13,10 @@
 """
 
 import logging
+import json
+import os
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
 import pandas as pd
 
@@ -59,7 +62,20 @@ class MarketTemperature:
         if tushare_pro is None:
             try:
                 import tushare as ts
-                self.tushare_pro = ts.pro_api()
+                token = os.getenv("TUSHARE_TOKEN")
+                config_path = Path(__file__).parent.parent / "config" / "tushare_config.json"
+                if not token and config_path.exists():
+                    with config_path.open("r", encoding="utf-8") as config_file:
+                        config = json.load(config_file)
+                    token = config.get("token") or config.get("api_key")
+
+                if token:
+                    self.tushare_pro = ts.pro_api(token)
+                else:
+                    logger.warning(
+                        "未配置 Tushare Token，市场温度计算不可用。"
+                        "请设置 TUSHARE_TOKEN 或 config/tushare_config.json"
+                    )
             except Exception as e:
                 logger.warning(f"初始化Tushare失败: {e}")
     
@@ -204,19 +220,36 @@ class MarketTemperature:
             是否为交易日
         """
         try:
-            if self.tushare_pro:
-                # 使用tushare的交易日历接口
-                df = self.tushare_pro.trade_cal(
-                    start_date=trade_date,
-                    end_date=trade_date,
-                    is_open='1'
-                )
-                if df is not None and not df.empty:
-                    return len(df) > 0
-            return False
+            datetime.strptime(trade_date, "%Y%m%d")
+        except (TypeError, ValueError):
+            raise DataNotAvailableError(
+                f"日期格式无效: {trade_date}，应为 YYYYMMDD"
+            )
+
+        if not self.tushare_pro:
+            raise DataNotAvailableError(
+                "Tushare Pro 未配置，无法查询交易日历。"
+                "请在 .env 中设置 TUSHARE_TOKEN 后重启服务"
+            )
+
+        try:
+            # 不使用 is_open 过滤：空结果代表日历数据不可用，而不是休市。
+            df = self.tushare_pro.trade_cal(
+                start_date=trade_date,
+                end_date=trade_date
+            )
         except Exception as e:
             logger.warning(f"检查交易日失败: {e}")
-            return False
+            raise DataNotAvailableError(
+                f"交易日历查询失败，无法确认日期 {trade_date}: {str(e)}"
+            )
+
+        if df is None or df.empty or 'is_open' not in df.columns:
+            raise DataNotAvailableError(
+                f"交易日历无日期 {trade_date} 的数据，无法确认是否交易日"
+            )
+
+        return str(df.iloc[0]['is_open']) == '1'
     
     def get_up_down_ratio_data(self, trade_date: str) -> Dict:
         """

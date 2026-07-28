@@ -560,9 +560,13 @@ async function refreshTemperatureData() {
  */
 async function recalculateTemperatureData() {
     try {
-        // 获取当前日期
+        // 使用浏览器本地日期，避免 toISOString() 在 UTC 转换时日期偏移
         const today = new Date();
-        const tradeDate = today.toISOString().slice(0, 10).replace(/-/g, '');
+        const tradeDate = [
+            today.getFullYear(),
+            String(today.getMonth() + 1).padStart(2, '0'),
+            String(today.getDate()).padStart(2, '0')
+        ].join('');
         
         // 显示加载提示
         const btn = document.querySelector('.btn-warning');
