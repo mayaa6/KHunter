@@ -5,6 +5,7 @@ services:
     image: khunter:local
     container_name: khunter
     restart: unless-stopped
+    stop_grace_period: 45s
     ports:
       - "${KHUNTER_BIND_ADDRESS:-127.0.0.1}:${KHUNTER_PORT:-5001}:5001"
     environment:

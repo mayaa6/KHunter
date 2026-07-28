@@ -24,6 +24,7 @@
 - `uv.lock` - 依赖锁文件
 - `Dockerfile` - 生产容器镜像
 - `compose.yaml` - 单机部署配置
+- `khunter.sh` - macOS/Linux Docker 快捷管理脚本
 - `main.py` - 主脚本
 - `web_server.py` - Web服务器脚本
 - `start.bat` - 启动脚本

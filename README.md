@@ -91,6 +91,22 @@ uv run --frozen python main.py web
 
 ### Docker 部署（推荐个人长期运行）
 
+macOS 和 Linux 可使用快捷管理脚本：
+
+```bash
+./khunter.sh start          # 构建并启动
+./khunter.sh stop           # 停止，保留全部数据
+./khunter.sh restart        # 重启
+./khunter.sh rebuild        # 拉取基础镜像、重新构建并启动
+./khunter.sh rebuild-clean  # 不使用构建缓存的完整重建
+./khunter.sh status         # 查看状态
+./khunter.sh logs           # 跟踪日志
+```
+
+首次执行 `start` 时，脚本会自动从 `.env.example` 创建 `.env`。
+
+也可以直接使用 Docker Compose：
+
 ```bash
 # 可选：创建本地环境变量文件，填写需要的数据源密钥
 cp .env.example .env
