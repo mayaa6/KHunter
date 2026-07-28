@@ -84,26 +84,64 @@ cd KHunter
 # 2. 按锁文件创建环境并安装依赖
 uv sync --frozen --no-dev
 
-# 3. 启动Web界面
+# 3. 首次本地运行时创建配置文件
+cp config/config.yaml.template config/config.yaml
+
+# 4. 启动Web界面
 uv run --frozen python main.py web
 ```
-第2，3步也可以直接在windows下双击根目录下start.bat文件自动处理
 
-### Docker 部署（推荐个人长期运行）
+### 启动脚本
 
-macOS 和 Linux 可使用快捷管理脚本：
+项目提供 Windows 本地启动脚本和 macOS/Linux Docker 管理脚本。
 
-```bash
-./khunter.sh start          # 构建并启动
-./khunter.sh stop           # 停止，保留全部数据
-./khunter.sh restart        # 重启
-./khunter.sh rebuild        # 拉取基础镜像、重新构建并启动
-./khunter.sh rebuild-clean  # 不使用构建缓存的完整重建
-./khunter.sh status         # 查看状态
-./khunter.sh logs           # 跟踪日志
+#### Windows：`start.bat`
+
+首次运行前，先复制 `config/config.yaml.template` 为 `config/config.yaml`。之后可以双击根目录下的 `start.bat`，或在命令提示符中运行：
+
+```bat
+start.bat
 ```
 
-首次执行 `start` 时，脚本会自动从 `.env.example` 创建 `.env`。
+脚本会自动：
+
+1. 检查 `uv` 是否已安装
+2. 执行 `uv sync --frozen --no-dev`，按锁文件同步生产依赖
+3. 执行 `uv run --frozen python main.py web`，在前台启动 Web 服务
+
+服务启动后访问 `http://localhost:5001`。需要停止时，在脚本窗口按 `Ctrl+C`。
+
+#### macOS/Linux：`khunter.sh`
+
+`khunter.sh` 使用 Docker Compose 管理服务，适合个人长期运行。使用前请安装并启动 Docker Desktop，或安装 Docker Engine 与 Compose 插件。
+
+```bash
+chmod +x khunter.sh
+./khunter.sh start
+```
+
+可用命令：
+
+| 命令 | 说明 |
+|------|------|
+| `./khunter.sh start` | 首次运行时构建镜像并启动；已有镜像时直接启动 |
+| `./khunter.sh stop` | 停止服务，保留数据库、配置和日志 |
+| `./khunter.sh restart` | 重启已有容器；容器不存在时自动启动 |
+| `./khunter.sh rebuild` | 拉取最新基础镜像，重新构建并启动 |
+| `./khunter.sh rebuild-clean` | 禁用构建缓存，完整重建并启动 |
+| `./khunter.sh status` | 查看容器状态 |
+| `./khunter.sh logs` | 持续显示最近 100 行应用日志，按 `Ctrl+C` 退出 |
+| `./khunter.sh help` | 显示脚本帮助 |
+
+首次执行需要配置的命令时，脚本会自动从 `.env.example` 创建 `.env`。建议启动前编辑 `.env`，配置端口、监听地址、时区和可选数据源密钥。脚本会等待容器通过健康检查，并在成功后显示访问地址；默认等待时间为 90 秒，可通过 `KHUNTER_HEALTH_TIMEOUT` 临时调整：
+
+```bash
+KHUNTER_HEALTH_TIMEOUT=180 ./khunter.sh start
+```
+
+Docker 启动时会在持久化配置卷中自动创建 `config.yaml`，因此不需要手动复制配置模板。
+
+### Docker Compose 手动部署
 
 也可以直接使用 Docker Compose：
 
@@ -131,12 +169,6 @@ docker run --rm \
 ```
 
 停止服务使用 `docker compose down`。不要使用 `docker compose down -v`，除非确实要删除全部持久化数据。
-
-本地非 Docker 运行时，首次启动前请执行：
-
-```bash
-cp config/config.yaml.template config/config.yaml
-```
 
 ## 🌐 Web界面功能
 
@@ -310,6 +342,30 @@ cp config/config.yaml.template config/config.yaml
 
 详细配置说明请参考各配置文件中的注释。
 
+### 市场温度与 Tushare
+
+市场温度计算依赖 Tushare Pro 的交易日历和行情数据。推荐在根目录的 `.env` 中配置：
+
+```dotenv
+TUSHARE_TOKEN=你的_Tushare_Token
+```
+
+也可以创建 `config/tushare_config.json`：
+
+```json
+{
+  "token": "你的_Tushare_Token"
+}
+```
+
+环境变量的优先级高于配置文件。修改配置后需要重启服务。
+
+市场温度模块会明确区分休市日和数据源异常：
+
+- 交易日历明确返回休市时，提示该日期不是交易日
+- Token 未配置、交易日历返回空数据或接口调用失败时，返回具体错误，不再误报为休市
+- Web 端手动重新计算时使用浏览器本地日期，避免 UTC 时区转换导致日期偏移
+
 ## 🔄 智能数据更新
 
 系统采用 TickFlow 批量 API + 腾讯财经降级的多层数据获取策略：
@@ -347,6 +403,17 @@ class MyStrategy(BaseStrategy):
         # 选股逻辑
         return signals
 ```
+
+## 🧪 运行测试
+
+开发依赖包含 pytest。同步开发环境并运行测试：
+
+```bash
+uv sync --frozen
+PYTHONPATH=. uv run --frozen pytest
+```
+
+市场温度测试覆盖交易日/休市日识别、Tushare 未配置、空交易日历、接口异常和无效日期格式等场景。
 
 ## ⚠️ 免责声明
 1. **本项目仅供学习和研究使用**，不构成任何投资建议。
