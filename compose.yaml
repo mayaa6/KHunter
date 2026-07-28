@@ -1,0 +1,27 @@
+services:
+  khunter:
+    build:
+      context: .
+    image: khunter:local
+    container_name: khunter
+    restart: unless-stopped
+    ports:
+      - "${KHUNTER_BIND_ADDRESS:-127.0.0.1}:${KHUNTER_PORT:-5001}:5001"
+    environment:
+      TZ: ${TZ:-Asia/Hong_Kong}
+      PORT: "5001"
+      DINGTALK_WEBHOOK: ${DINGTALK_WEBHOOK:-}
+      DINGTALK_SECRET: ${DINGTALK_SECRET:-}
+      EAST_MONEY_COOKIE: ${EAST_MONEY_COOKIE:-}
+      TUSHARE_TOKEN: ${TUSHARE_TOKEN:-}
+    volumes:
+      - khunter-data:/app/data
+      - khunter-logs:/app/logs
+      - khunter-config:/app/config
+      - khunter-reports:/app/reports
+
+volumes:
+  khunter-data:
+  khunter-logs:
+  khunter-config:
+  khunter-reports:

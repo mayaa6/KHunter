@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import sys
+import os
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -23,7 +24,13 @@ class B1PatternLibrary:
     - 为B2、B3等扩展预留空间
     """
     
-    CACHE_FILE = Path("/root/quant-csv/data/b1_pattern_library_cache.json")
+    _PROJECT_ROOT = Path(__file__).resolve().parent.parent
+    CACHE_FILE = Path(
+        os.getenv(
+            "KHUNTER_PATTERN_CACHE",
+            str(_PROJECT_ROOT / "data" / "b1_pattern_library_cache.json"),
+        )
+    )
     
     def __init__(self, csv_manager):
         self.csv_manager = csv_manager

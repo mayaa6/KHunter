@@ -19,7 +19,7 @@ try:
     print("✓ VectorBT已安装")
 except ImportError:
     print("✗ VectorBT未安装")
-    print("请运行: pip install vectorbt")
+    print("请运行: uv sync")
     sys.exit(1)
 
 from trading.vectorbt_prototype import (

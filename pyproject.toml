@@ -1,0 +1,39 @@
+[project]
+name = "khunter"
+version = "1.0.0"
+description = "Personal A-share quantitative trading and analysis system"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "akshare>=1.11.0",
+    "beautifulsoup4>=4.12.0",
+    "cryptography>=43.0.0",
+    "fastdtw>=0.3.4",
+    "flask>=3.0.0,<4",
+    "flask-socketio>=5.3.0,<6",
+    "gunicorn>=23.0.0,<24",
+    "hmmlearn>=0.3.2,<0.4",
+    "lxml>=4.9.0",
+    "matplotlib>=3.7.0",
+    "numpy>=1.24.0,<3",
+    "pandas>=2.0.0,<3",
+    "pillow>=10.0.0",
+    "pyyaml>=6.0",
+    "requests>=2.31.0,<3",
+    "schedule>=1.2.0,<2",
+    "scipy>=1.10.0,<2",
+    "simple-websocket>=1.1.0,<2",
+    "tushare>=1.4.0,<2",
+    "vectorbt>=0.28.0,<0.29",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0,<9",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.extra-build-dependencies]
+fastdtw = ["cython", "numpy"]

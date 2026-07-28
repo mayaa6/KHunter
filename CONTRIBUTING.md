@@ -171,7 +171,8 @@ khunter/
 ├── doc/                   # 文档
 ├── main.py                # 主程序
 ├── web_server.py          # Web服务器
-└── requirements.txt       # 依赖列表
+├── pyproject.toml         # 依赖与项目元数据
+└── uv.lock                # 可复现依赖锁文件
 ```
 
 ## 🧪 测试
@@ -180,7 +181,7 @@ khunter/
 
 ```bash
 # 运行所有测试
-pytest
+uv run pytest
 
 # 运行特定测试文件
 pytest test/test_strategy.py

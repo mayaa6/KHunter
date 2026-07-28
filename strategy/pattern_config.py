@@ -15,7 +15,13 @@ from pathlib import Path
 
 def _load_yaml_config():
     """从YAML配置文件加载B1PatternMatch配置"""
-    config_path = Path("/root/quant-csv/config/strategy_params.yaml")
+    project_root = Path(__file__).resolve().parent.parent
+    config_path = Path(
+        os.getenv(
+            "KHUNTER_STRATEGY_CONFIG",
+            str(project_root / "config" / "strategy_params.yaml"),
+        )
+    )
     
     if not config_path.exists():
         return {}

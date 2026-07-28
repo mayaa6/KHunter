@@ -125,9 +125,10 @@ app = Flask(__name__,
 app.json_encoder = NumpyEncoder
 
 # 初始化SocketIO（配置长连接参数以支持长时间的回测任务）
+allowed_origins = os.getenv("KHUNTER_ALLOWED_ORIGINS")
 socketio = SocketIO(
     app, 
-    cors_allowed_origins="*", 
+    cors_allowed_origins=allowed_origins or None,
     async_mode='threading',
     ping_timeout=3600,  # 1小时 ping 超时
     ping_interval=60,   # 60秒 ping 间隔
@@ -171,6 +172,17 @@ selection_record_manager = SelectionRecordManager()
 ranking_manager = RankingManager()
 stock_analyzer = StockAnalyzer()
 data_collection_service = get_data_collection_service("data")
+
+
+@app.get("/healthz")
+def health_check():
+    """Container health check, including a lightweight database probe."""
+    try:
+        db_manager.execute("SELECT 1").fetchone()
+        return jsonify({"status": "ok"})
+    except Exception as exc:
+        logger.error("Health check failed: %s", exc)
+        return jsonify({"status": "unhealthy"}), 503
 
 # 初始化K线初始化器
 from utils.akshare_fetcher import AKShareFetcher

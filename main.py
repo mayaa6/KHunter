@@ -38,6 +38,7 @@ from utils.kline_chart import generate_kline_chart
 from utils.db_initializer import init_databases_if_needed
 from utils.stock_filter import StockFilter
 import yaml
+from utils.app_config import load_app_config
 
 
 class QuantSystem:
@@ -65,11 +66,7 @@ class QuantSystem:
     
     def _load_config(self, config_file):
         """加载配置文件"""
-        config_path = Path(config_file)
-        if config_path.exists():
-            with open(config_path, 'r', encoding='utf-8') as f:
-                return yaml.safe_load(f) or {}
-        return {}
+        return load_app_config(config_file)
     
 
     def _load_stock_names(self, stock_data):
@@ -548,7 +545,7 @@ class QuantSystem:
         try:
             import schedule
         except ImportError:
-            print("✗ 请安装 schedule: pip install schedule")
+            print("✗ 依赖缺失，请运行: uv sync")
             return
         
         schedule_time = self.config.get('schedule', {}).get('time', '15:05')

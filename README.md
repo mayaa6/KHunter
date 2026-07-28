@@ -71,8 +71,8 @@ KHunter采用**五维度综合评分模型**，从多个角度全面评估股票
 - **一键启动** - 快速开始选股
 - **完善的文档** - 详细的策略说明和使用指南
 ### 环境要求
-- Python 3.8+
-- pip 或 conda
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/)
 
 ### 安装步骤
 
@@ -81,14 +81,46 @@ KHunter采用**五维度综合评分模型**，从多个角度全面评估股票
 git clone https://github.com/ling-0729/KHunter.git
 cd KHunter
 
-# 2. 安装依赖
-pip install -r requirements.txt
+# 2. 按锁文件创建环境并安装依赖
+uv sync --frozen --no-dev
 
 # 3. 启动Web界面
-python main.py web
+uv run --frozen python main.py web
 ```
 第2，3步也可以直接在windows下双击根目录下start.bat文件自动处理
 
+### Docker 部署（推荐个人长期运行）
+
+```bash
+# 可选：创建本地环境变量文件，填写需要的数据源密钥
+cp .env.example .env
+
+# 构建并后台启动
+docker compose up -d --build
+
+# 查看启动状态和日志
+docker compose ps
+docker compose logs -f khunter
+```
+
+默认仅监听 `127.0.0.1:5001`，访问 `http://localhost:5001`。如需从家庭局域网访问，在 `.env` 中将 `KHUNTER_BIND_ADDRESS` 改为 `0.0.0.0`，并使用主机防火墙限制访问范围。
+
+数据库、运行数据、日志、报告和可写配置分别保存在 Docker 命名卷中，重新构建镜像不会丢失。备份可使用：
+
+```bash
+docker run --rm \
+  -v khunter_khunter-data:/source:ro \
+  -v "$PWD/backups:/backup" \
+  alpine tar -czf /backup/khunter-data.tar.gz -C /source .
+```
+
+停止服务使用 `docker compose down`。不要使用 `docker compose down -v`，除非确实要删除全部持久化数据。
+
+本地非 Docker 运行时，首次启动前请执行：
+
+```bash
+cp config/config.yaml.template config/config.yaml
+```
 
 ## 🌐 Web界面功能
 
@@ -154,7 +186,7 @@ python main.py web
 
 ## 🛠️ 技术栈
 
-- **Python 3.8+** - 核心语言
+- **Python 3.11+** - 核心语言
 - **TickFlow** - 免费批量K线数据API
 - **akshare** - A股实时/历史数据获取
 - **pandas/numpy** - 数据处理与技术指标计算

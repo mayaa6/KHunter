@@ -100,20 +100,16 @@ logs/
 ### 定期更新依赖
 
 ```bash
-# 检查过期的依赖
-pip list --outdated
+# 更新并重新锁定依赖
+uv lock --upgrade
 
-# 更新所有依赖
-pip install --upgrade -r requirements.txt
-
-# 检查安全漏洞
-pip install safety
-safety check
+# 同步锁定环境
+uv sync --frozen
 ```
 
 ### 依赖版本管理
 
-在 `requirements.txt` 中指定版本范围：
+在 `pyproject.toml` 中指定版本范围，并提交 `uv.lock`：
 
 ```
 # ✅ 推荐：指定最小版本
@@ -241,15 +237,15 @@ logger.debug(f"Webhook domain: {webhook_url.split('/')[2]}")
 
 ```bash
 # 检查Python安全问题
-pip install bandit
+uvx bandit
 bandit -r strategy/ utils/ web_server.py
 
 # 检查依赖漏洞
-pip install safety
+uvx safety
 safety check
 
 # 代码质量检查
-pip install pylint
+uvx pylint
 pylint strategy/ utils/
 ```
 

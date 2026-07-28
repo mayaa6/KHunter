@@ -4,26 +4,20 @@ title KHunter - Start
 
 cd /d "%~dp0"
 
-:: Check Python
-python --version >nul 2>&1
+:: Check uv
+uv --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Python not found
+    echo [ERROR] uv not found. Install it from https://docs.astral.sh/uv/
     pause
     exit /b 1
 )
 
-:: Use system Python
-echo Using system Python...
-
-:: Install dependencies
-if exist "requirements.txt" (
-    echo Installing dependencies...
-    pip install -r requirements.txt -q
-)
+echo Synchronizing the locked environment...
+uv sync --frozen --no-dev
 
 :: Start server
 echo.
 echo Starting KHunter...
-python web_server.py
+uv run --frozen python main.py web
 
 pause

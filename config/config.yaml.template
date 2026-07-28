@@ -24,3 +24,17 @@ schedule:
 update:
   lookback_days: 10
   skip_failed: true
+
+# 股票过滤配置
+filters:
+  min_market_cap: 10
+  max_market_cap: 10000
+  min_float_shares: 1
+  max_float_shares: 100
+  exclude_new_stock_days: 60
+  exclude_st: true
+  exclude_delisting_risk: true
+
+# 交易配置
+trading:
+  initial_capital: 300000.0

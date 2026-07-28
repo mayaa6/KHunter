@@ -33,3 +33,9 @@ data/*
 # Env files
 .env
 .env.local
+.env.*
+!.env.example
+
+# Local credentials and runtime configuration
+config/config.yaml
+config/tushare_config.json
