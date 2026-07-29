@@ -104,16 +104,9 @@ async function initializeApp() {
     
     // 初始化导航
     modules.navigation.setupNavigation();
-    
-    // 初始化页面标题 - 确保页面加载时标题正确显示
-    modules.navigation.switchPage(currentPage);
-    
-    modules.stocks.loadStats();
-    modules.stocks.loadMyGoldenStocks();
-    modules.stocks.loadHotIndustries();
-    modules.stocks.loadHotAreas();
-    modules.analysis.setupStockAnalysis();
-    modules.ranking.setupRankingEvents();
+
+    // 立即启动首屏生命周期，避免被其他一次性初始化任务阻塞
+    const initialPageTransition = modules.navigation.switchPage(currentPage);
     
     // 初始化批量回测模块
     await modules.backtestBatch.initBacktestBatchModule();
@@ -174,6 +167,8 @@ async function initializeApp() {
     if (confirmStrategyBtn) {
         confirmStrategyBtn.addEventListener('click', modules.selection.confirmStrategySelection);
     }
+
+    await initialPageTransition;
 }
 
 // 页面加载完成后初始化

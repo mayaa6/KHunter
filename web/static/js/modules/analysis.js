@@ -2,6 +2,8 @@
  * 个股图谱评分相关功能模块
  */
 
+let analysisEventsBound = false;
+
 /**
  * 重置个股图谱页面状态，隐藏结果区域并重置表单
  */
@@ -70,6 +72,8 @@ export function resetScoreQuery() {
  * 初始化个股图谱表单事件绑定
  */
 export function setupStockAnalysis() {
+    if (analysisEventsBound) return;
+
     console.log('setupStockAnalysis 被调用');
     // 绑定评分查询表单
     const scoreForm = document.getElementById('score-form');
@@ -82,6 +86,7 @@ export function setupStockAnalysis() {
             e.preventDefault();
             await queryStockScore();
         });
+        analysisEventsBound = true;
     } else {
         console.warn('找不到评分表单元素 score-form');
     }

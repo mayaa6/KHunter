@@ -10,6 +10,9 @@ const StrategyRunnerModule = {
     
     // 正在执行标志（防止重复请求）
     _isExecuting: false,
+
+    // 页面 DOM 常驻，只允许绑定一次事件
+    _eventsBound: false,
     
     // 策略名称映射表（英文类名 -> 中文名称）
     strategyNameMap: {},
@@ -47,6 +50,8 @@ const StrategyRunnerModule = {
     
     // 设置事件监听器
     setupEventListeners: function() {
+        if (this._eventsBound) return;
+
         // 初始化按钮
         const initBtn = document.getElementById('init-runner-btn');
         if (initBtn) {
@@ -104,6 +109,8 @@ const StrategyRunnerModule = {
                 this.removeTask(index);
             }
         });
+
+        this._eventsBound = true;
     },
     
     // 加载策略运行页面

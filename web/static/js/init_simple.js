@@ -2,10 +2,26 @@
  * 超简洁版初始化数据页面 JavaScript
  * 功能：选择初始化范围 -> 初始化中 -> 显示结果
  * 
- * 注意：此文件中的函数与 app.js 中的函数配合使用
- * 避免重复定义，使用不同的函数名
- * 依赖 app.js 中已定义的 initState 对象
+ * 注意：此文件仍以经典脚本方式加载，并向页面生命周期暴露入口。
  */
+
+const initState = { isRunning: false };
+let initProgressInterval = null;
+let initPageActive = false;
+
+function initDataInitPage() {
+    initPageActive = true;
+    resetInitForm();
+    void getInitProgress(true);
+}
+
+function cleanupDataInitPage() {
+    initPageActive = false;
+    if (initProgressInterval) {
+        clearInterval(initProgressInterval);
+        initProgressInterval = null;
+    }
+}
 
 /**
  * 开始初始化
@@ -61,6 +77,8 @@ function startInitialization() {
             console.log('后端响应:', result);
             
             if (result.success) {
+                initState.isRunning = true;
+
                 // 获取任务ID
                 const taskId = result.taskId;
                 console.log('初始化已启动，任务ID:', taskId);
@@ -91,36 +109,58 @@ function startInitialization() {
  * 轮询初始化进度
  */
 function pollInitProgress() {
+    if (!initPageActive) return;
+
+    if (initProgressInterval) {
+        clearInterval(initProgressInterval);
+    }
+
     // 立即获取一次进度
     getInitProgress();
     
     // 每1000ms轮询一次进度
-    const intervalId = setInterval(() => {
-        getInitProgress(intervalId);
-    }, 1000);
+    initProgressInterval = setInterval(getInitProgress, 1000);
 }
 
 /**
  * 获取初始化进度
  */
-async function getInitProgress(intervalId) {
+async function getInitProgress(restoreOnly = false) {
+    if (!initPageActive) return;
+
     try {
         const url = '/api/data/init/progress';
         const response = await window.apiFetch(url);
         const result = await response.json();
         
         if (result.success) {
-            // 更新进度UI
-            updateInitProgressDisplay(result.data);
-            
             // 根据状态判断是否完成
             const status = result.data.status;
+            const isRunning = status === 'running' || status === 'in_progress';
+            if (restoreOnly && !isRunning && !initState.isRunning) {
+                return;
+            }
+
+            updateInitProgressDisplay(result.data);
+
+            if (isRunning) {
+                initState.isRunning = true;
+                document.getElementById('init-step1').style.display = 'none';
+                document.getElementById('init-step2').style.display = 'block';
+
+                if (!initProgressInterval) {
+                    initProgressInterval = setInterval(getInitProgress, 1000);
+                }
+            }
+
             if (status === 'completed' || status === 'failed' || status === 'cancelled') {
                 console.log('初始化已完成，状态:', status);
+                initState.isRunning = false;
                 
                 // 清除轮询
-                if (intervalId) {
-                    clearInterval(intervalId);
+                if (initProgressInterval) {
+                    clearInterval(initProgressInterval);
+                    initProgressInterval = null;
                 }
                 
                 // 显示完成状态
@@ -156,6 +196,7 @@ async function cancelInitialization() {
         const result = await response.json();
         
         if (result.success) {
+            initState.isRunning = false;
             window.AppToast.notify('✓ 初始化已取消');
             resetInitForm();
         } else {
@@ -459,3 +500,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('已注册全局 WebSocket 初始化进度监听器');
     }
 });
+
+window.initDataInitPage = initDataInitPage;
+window.cleanupDataInitPage = cleanupDataInitPage;

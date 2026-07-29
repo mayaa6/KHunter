@@ -36,6 +36,9 @@ let backtestConfig = {
     enable_dynamic_stop_loss: true    // 持股3天内动态止损（2/3）
 };
 
+let configFormEventsBound = false;
+let paramsFormEventsBound = false;
+
 /**
  * 格式化日期时间
  * @param {string} dateTimeStr - 日期时间字符串
@@ -272,10 +275,11 @@ async function loadStrategies() {
  */
 function bindConfigFormEvents() {
     const runBacktestBtn = document.getElementById('run-backtest-btn');
-    if (runBacktestBtn) {
+    if (runBacktestBtn && !configFormEventsBound) {
         runBacktestBtn.addEventListener('click', async () => {
             await runBacktest();
         });
+        configFormEventsBound = true;
     }
 }
 
@@ -284,8 +288,29 @@ function bindConfigFormEvents() {
  */
 function bindParamsFormEvents() {
     const saveBacktestParamsBtn = document.getElementById('save-backtest-params-btn');
-    if (saveBacktestParamsBtn) {
+    if (saveBacktestParamsBtn && !paramsFormEventsBound) {
         saveBacktestParamsBtn.addEventListener('click', saveBacktestParams);
+        paramsFormEventsBound = true;
+    }
+}
+
+/**
+ * 离开回测页面时释放当前视图持有的图表和模态框。
+ */
+export function cleanupBacktestPage() {
+    if (window.equityChart) {
+        window.equityChart.destroy();
+        window.equityChart = null;
+    }
+
+    if (window.modalEquityChart) {
+        window.modalEquityChart.destroy();
+        window.modalEquityChart = null;
+    }
+
+    const modal = document.getElementById('backtest-result-modal');
+    if (modal) {
+        modal.style.display = 'none';
     }
 }
 

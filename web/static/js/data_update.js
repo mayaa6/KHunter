@@ -6,6 +6,7 @@
 // 全局状态
 let updateTaskId = null;
 let updateProgressInterval = null;
+let updatePageActive = false;
 
 /**
  * 初始化数据更新页面
@@ -13,9 +14,7 @@ let updateProgressInterval = null;
 function initDataUpdatePage() {
     try {
         console.log('初始化数据更新页面...');
-        
-        // 重置全局状态
-        updateTaskId = null;
+        updatePageActive = true;
         
         // 清除进度轮询
         if (updateProgressInterval) {
@@ -23,15 +22,35 @@ function initDataUpdatePage() {
             updateProgressInterval = null;
         }
         
-        // 重置UI
-        resetUpdateUI();
+        if (updateTaskId) {
+            const initialState = document.getElementById('update-initial-state');
+            const progressState = document.getElementById('update-progress-state');
+            const completedState = document.getElementById('update-completed-state');
+            if (initialState) initialState.style.display = 'none';
+            if (progressState) progressState.style.display = 'block';
+            if (completedState) completedState.style.display = 'none';
+            pollUpdateProgress();
+        } else {
+            resetUpdateUI();
+        }
         
         // 加载上次更新时间
-        loadLastUpdateTime();
+        void loadLastUpdateTime();
         
         console.log('数据更新页面初始化完成');
     } catch (error) {
         console.error('初始化数据更新页面时出错:', error);
+    }
+}
+
+/**
+ * 离开页面时停止页面专属轮询，不取消后端任务。
+ */
+function cleanupDataUpdatePage() {
+    updatePageActive = false;
+    if (updateProgressInterval) {
+        clearInterval(updateProgressInterval);
+        updateProgressInterval = null;
     }
 }
 
@@ -168,6 +187,8 @@ function pollUpdateProgress() {
         clearInterval(updateProgressInterval);
     }
     
+    if (!updatePageActive) return;
+
     // 立即获取一次进度
     getUpdateProgress();
     
@@ -179,6 +200,8 @@ function pollUpdateProgress() {
  * 获取更新进度
  */
 async function getUpdateProgress() {
+    if (!updatePageActive) return;
+
     if (!updateTaskId) {
         console.warn('没有任务ID，无法获取进度');
         return;
@@ -465,3 +488,6 @@ function showRebuildExdividendResult(result) {
         console.error('显示重建结果时出错:', error);
     }
 }
+
+window.initDataUpdatePage = initDataUpdatePage;
+window.cleanupDataUpdatePage = cleanupDataUpdatePage;

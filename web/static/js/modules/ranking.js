@@ -2,6 +2,8 @@
  * 选股排名相关功能模块
  */
 
+let rankingEventsBound = false;
+
 /**
  * 初始化选股排名页面
  */
@@ -441,6 +443,8 @@ export async function forceRegenerateRanking() {
  * 设置排名相关事件监听
  */
 export function setupRankingEvents() {
+    if (rankingEventsBound) return;
+
     // 绑定生成排名按钮
     const generateBtn = document.getElementById('generate-ranking-btn');
     if (generateBtn) {
@@ -458,4 +462,6 @@ export function setupRankingEvents() {
     if (forceRegenerateBtn) {
         forceRegenerateBtn.addEventListener('click', forceRegenerateRanking);
     }
+
+    rankingEventsBound = true;
 }

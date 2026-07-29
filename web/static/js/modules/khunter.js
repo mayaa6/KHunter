@@ -6,6 +6,9 @@
 // 全局变量
 let totalCount = 0;
 let currentResults = [];
+let khunterPageInitialized = false;
+let khunterInitialization = null;
+let khunterTrackingEventsBound = false;
 
 /**
  * 获取最后一根K线日期并设置为默认日期
@@ -72,6 +75,18 @@ async function loadTimingStrategies() {
  * 页面初始化
  */
 async function initPage() {
+    if (khunterPageInitialized) return;
+    if (khunterInitialization) return khunterInitialization;
+
+    khunterInitialization = initializeKHunterPage();
+    try {
+        await khunterInitialization;
+    } finally {
+        khunterInitialization = null;
+    }
+}
+
+async function initializeKHunterPage() {
     // 1. 获取最后一根K线日期作为默认日期
     await fetchLatestKlineDate();
     
@@ -112,6 +127,8 @@ async function initPage() {
     
     // 7. 绑定表格行点击事件（事件委托）
     document.getElementById('results-tbody').addEventListener('click', handleTableClick);
+
+    khunterPageInitialized = true;
 }
 
 /**
@@ -713,20 +730,10 @@ function showAlert(message, type = 'info') {
 }
 
 /**
- * 页面加载完成后初始化
- */
-document.addEventListener('DOMContentLoaded', initPage);
-
-/**
  * 导出 initKHunterPage 函数供 navigation.js 调用
  */
-export function initKHunterPage() {
-    // 如果页面已经初始化过，直接返回
-    if (document.getElementById('hunting-date').value) {
-        return;
-    }
-    // 否则调用 initPage 进行初始化
-    initPage();
+export async function initKHunterPage() {
+    await initPage();
 }
 
 /**
@@ -923,10 +930,13 @@ export function renderKHunterTrackingResult(data, container, huntingDate) {
  * 设置狩猎跟踪事件监听
  */
 export function setupKHunterTrackingEvents() {
+    if (khunterTrackingEventsBound) return;
+
     // 绑定狩猎跟踪按钮
     const trackBtn = document.getElementById('track-khunter-btn');
     if (trackBtn) {
         trackBtn.addEventListener('click', trackKHunter);
+        khunterTrackingEventsBound = true;
     }
 }
 
