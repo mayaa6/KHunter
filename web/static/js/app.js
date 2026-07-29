@@ -130,7 +130,6 @@ async function initializeApp() {
     window.confirmStrategySelection = modules.selection.confirmStrategySelection;
     window.closeStrategyModal = modules.selection.closeStrategyModal;
     window.selectAllStrategies = modules.selection.selectAllStrategies;
-    window.deselectAllStrategies = modules.selection.deselectAllStrategies;
     window.saveSelectionResults = modules.selection.saveSelectionResults;
     window.viewStockDetail = modules.stocks.viewStockDetail;
     window.closeModal = modules.stocks.closeModal;

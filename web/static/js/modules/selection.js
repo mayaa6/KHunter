@@ -48,6 +48,9 @@ export function showStrategySelectionModal(strategies) {
             </label>
         </div>
     `).join('');
+
+    list.onchange = updateStrategySelectionControls;
+    updateStrategySelectionControls();
     
     // 初始化日期选择器为当日（使用更精确的选择器避免与span冲突）
     const selectionDateInput = document.querySelector('#strategy-selection-modal #selection-date');
@@ -108,19 +111,36 @@ export function closeStrategyModal() {
 }
 
 /**
- * 全选所有策略
+ * 更新全选按钮和已选数量
  */
-export function selectAllStrategies() {
+function updateStrategySelectionControls() {
     const checkboxes = document.querySelectorAll('#strategy-list input[type="checkbox"]');
-    checkboxes.forEach(cb => cb.checked = true);
+    const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const allSelected = checkboxes.length > 0 && selectedCount === checkboxes.length;
+    const selectAllButton = document.getElementById('select-all-strategies-btn');
+    const selectionCount = document.getElementById('strategy-selection-count');
+
+    if (selectionCount) {
+        selectionCount.textContent = `已选 ${selectedCount} / ${checkboxes.length} 项`;
+    }
+
+    if (selectAllButton) {
+        selectAllButton.textContent = allSelected ? '取消全选' : '全选';
+        selectAllButton.setAttribute('aria-pressed', String(allSelected));
+    }
 }
 
 /**
- * 反选所有策略
+ * 全选所有策略；全部选中时再次点击则取消全选
  */
-export function deselectAllStrategies() {
+export function selectAllStrategies() {
     const checkboxes = document.querySelectorAll('#strategy-list input[type="checkbox"]');
-    checkboxes.forEach(cb => cb.checked = !cb.checked);
+    const allSelected = checkboxes.length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+
+    checkboxes.forEach(cb => {
+        cb.checked = !allSelected;
+    });
+    updateStrategySelectionControls();
 }
 
 /**

@@ -1788,20 +1788,30 @@
 
     <!-- 策略选择对话框 -->
     <div id="strategy-selection-modal" class="modal">
-        <div class="modal-content" style="max-width: 700px; display: flex; flex-direction: column;">
+        <div class="modal-content strategy-selection-dialog">
             <div class="modal-header">
                 <h3>选择执行策略</h3>
                 <button class="close-btn" onclick="closeStrategyModal()">&times;</button>
             </div>
-            <div class="modal-body" style="flex: 1; overflow-y: auto; min-height: 0;">
+            <div class="modal-body">
                 <!-- 隐藏的逻辑选择器，默认使用 OR -->
                 <input type="hidden" name="logic" value="or">
-                
-                <div class="date-selector" style="margin-bottom: 20px; display: flex; gap: 12px; align-items: center;">
-                    <label style="font-weight: 600; white-space: nowrap;">选股日期：</label>
-                    <input type="date" id="selection-date" value="" style="padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; width: 140px;">
-                    <button class="btn btn-sm" onclick="selectAllStrategies()" style="padding: 8px 16px; background-color: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; white-space: nowrap;">全选</button>
-                    <button class="btn btn-sm" onclick="deselectAllStrategies()" style="padding: 8px 16px; background-color: #6b7280; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; white-space: nowrap;">反选</button>
+
+                <div class="strategy-selection-toolbar">
+                    <div class="date-selector">
+                        <label for="selection-date">选股日期</label>
+                        <input type="date" id="selection-date" value="">
+                    </div>
+                    <div class="strategy-selection-actions">
+                        <span id="strategy-selection-count" class="strategy-selection-count">已选 0 项</span>
+                        <button
+                            id="select-all-strategies-btn"
+                            class="btn btn-sm strategy-select-all-btn"
+                            type="button"
+                            onclick="selectAllStrategies()"
+                            aria-pressed="false"
+                        >全选</button>
+                    </div>
                 </div>
                 <div class="strategy-list" id="strategy-list">
                     <!-- 动态生成 -->
