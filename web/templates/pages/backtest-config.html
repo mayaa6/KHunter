@@ -1,0 +1,180 @@
+<div id="backtest-config-page" class="page">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 回测执行条件 -->
+                            <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-bottom:24px;" role="form" aria-label="回测执行条件">
+                                <div>
+                                    <label for="strategy-select" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">策略选择</label>
+                                    <select class="form-control" id="strategy-select" style="min-width:150px;">
+                                        <option value="">加载中...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="backtest-timing-strategy" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">择时策略</label>
+                                    <select class="form-control" id="backtest-timing-strategy" style="min-width:150px;">
+                                        <!-- 动态加载策略列表 -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="start-date" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">开始日期</label>
+                                    <input class="form-control" type="date" id="start-date" required aria-label="回测开始日期">
+                                </div>
+                                <div>
+                                    <label for="end-date" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">结束日期</label>
+                                    <input class="form-control" type="date" id="end-date" required aria-label="回测结束日期">
+                                </div>
+                                <button type="button" id="add-task-btn" class="btn btn-primary" style="padding:6px 16px; font-size:12px;" aria-label="加入任务">加入任务</button>
+                            </div>
+                            
+                            <!-- 任务列表区域 -->
+                            <div id="backtest-task-list" style="margin-bottom:24px; display:none;">
+                                <h4 style="margin-bottom:12px; color:#374151;">已加入的回测任务</h4>
+                                <div class="table-container" style="border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; margin-bottom:12px;">
+                                    <table class="data-table" id="backtest-task-table" aria-label="回测任务列表">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" style="width:50px;">序号</th>
+                                            <th scope="col">策略名称</th>
+                                            <th scope="col">择时策略</th>
+                                            <th scope="col">开始日期</th>
+                                            <th scope="col">结束日期</th>
+                                            <th scope="col" style="width:80px;">操作</th>
+                                        </tr>
+                                    </thead>
+                                        <tbody id="backtest-task-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                    <div style="font-size:12px; color:#6b7280;">
+                                        <span>任务总数: <span id="task-count" style="font-weight:bold;">0</span></span>
+                                        <span style="margin-left:20px;">预计耗时: <span id="estimated-time" style="font-weight:bold;">0小时</span></span>
+                                    </div>
+                                    <button type="button" id="start-execution-btn" class="btn btn-success" style="padding:6px 16px; font-size:12px;" aria-label="开始执行回测" disabled>开始执行回测</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 执行进度区域 -->
+                            <div id="backtest-progress-container" style="display:none; margin-bottom:24px; padding:16px; border:1px solid #e5e7eb; border-radius:6px; background:#f9fafb;">
+                                <div style="margin-bottom:12px;">
+                                    <div id="current-task-info" style="font-size:14px; font-weight:600; color:#374151; margin-bottom:8px;">正在执行: 加载中...</div>
+                                    <div style="display:flex; gap:10px; align-items:center;">
+                                        <div style="flex:1;">
+                                            <div class="progress-bar" style="height:20px; background:#e5e7eb; border-radius:4px; overflow:hidden;">
+                                                <div id="backtest-progress-fill" style="height:100%; background:#22c55e; width:0%; transition:width 0.3s ease;"></div>
+                                            </div>
+                                        </div>
+                                        <div id="backtest-progress-percent" style="font-size:12px; font-weight:bold; color:#374151; min-width:40px;">0%</div>
+                                    </div>
+                                </div>
+                                <div style="font-size:12px; color:#6b7280; margin-bottom:12px;">
+                                    预计剩余: <span id="remaining-time" style="font-weight:bold;">0小时</span>
+                                </div>
+                                <div style="display:flex; gap:10px;">
+                                    <button type="button" id="pause-btn" class="btn btn-warning" style="padding:6px 12px; font-size:12px;" aria-label="暂停">暂停</button>
+                                    <button type="button" id="continue-btn" class="btn btn-info" style="padding:6px 12px; font-size:12px; display:none;" aria-label="继续">继续</button>
+                                    <button type="button" id="cancel-btn" class="btn btn-danger" style="padding:6px 12px; font-size:12px;" aria-label="取消">取消</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 结果页签区域 -->
+                            <div id="backtest-result-tabs" style="display:none; margin-bottom:24px;">
+                                <div style="display:flex; gap:8px; border-bottom:1px solid #e5e7eb; margin-bottom:16px; overflow-x:auto;">
+                                    <div id="result-tabs-container" style="display:flex; gap:8px;">
+                                    </div>
+                                </div>
+                                <div id="backtest-result-content">
+                                </div>
+                            </div>
+                            
+                            <!-- 回测结果展示区域 -->
+                            <div id="backtest-result-container" style="display:none; margin-top:20px;">
+                                <h4 style="margin-bottom:16px; color:#374151;">回测结果</h4>
+                                
+                                <!-- 绩效指标卡片 -->
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:24px;">
+                                    <div class="analysis-card" style="padding:12px; border:1px solid #e5e7eb; border-radius:6px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">总收益率</div>
+                                        <div id="backtest-total-return" style="font-size:24px; font-weight:bold; color:#22c55e;">0%</div>
+                                    </div>
+                                    <div class="analysis-card" style="padding:12px; border:1px solid #e5e7eb; border-radius:6px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">胜率</div>
+                                        <div id="backtest-win-rate" style="font-size:24px; font-weight:bold; color:#3b82f6;">0%</div>
+                                    </div>
+                                    <div class="analysis-card" style="padding:12px; border:1px solid #e5e7eb; border-radius:6px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">盈亏比</div>
+                                        <div id="backtest-profit-loss-ratio" style="font-size:24px; font-weight:bold; color:#f59e0b;">0</div>
+                                    </div>
+                                    <div class="analysis-card" style="padding:12px; border:1px solid #e5e7eb; border-radius:6px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">最大回撤</div>
+                                        <div id="backtest-max-drawdown" style="font-size:24px; font-weight:bold; color:#ef4444;">0%</div>
+                                    </div>
+                                    <div class="analysis-card" style="padding:12px; border:1px solid #e5e7eb; border-radius:6px; background:#ffffff;">
+                                        <div style="font-size:12px; color:#6b7280; margin-bottom:4px;">夏普比率</div>
+                                        <div id="backtest-sharpe-ratio" style="font-size:24px; font-weight:bold; color:#8b5cf6;">0</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 收益曲线图表 -->
+                                <div style="margin-bottom:24px;">
+                                    <h5 style="margin-bottom:12px; color:#374151; font-size:14px;">收益曲线</h5>
+                                    <div style="border:1px solid #e5e7eb; border-radius:6px; padding:16px; background:#ffffff;">
+                                        <canvas id="backtest-equity-chart" height="300"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- 温度约束统计 -->
+                                <div id="temp-constraint-stats" style="display:none; margin-bottom:24px; padding:16px; background:#f9fafb; border-radius:6px; border:1px solid #e5e7eb;">
+                                    <h5 style="margin-bottom:12px; color:#374151; font-size:14px;">🌡️ 温度约束统计</h5>
+                                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:12px;">
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">约束模式</div>
+                                            <div id="temp-stats-mode" style="font-size:16px; font-weight:bold; color:#374151;">--</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">受约束天数</div>
+                                            <div id="temp-stats-constrained" style="font-size:16px; font-weight:bold; color:#f59e0b;">--</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">冰封天数</div>
+                                            <div id="temp-stats-banned" style="font-size:16px; font-weight:bold; color:#ef4444;">--</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">平均仓位</div>
+                                            <div id="temp-stats-position" style="font-size:16px; font-weight:bold; color:#3b82f6;">--</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">数量约束</div>
+                                            <div id="temp-stats-count" style="font-size:16px; font-weight:bold; color:#8b5cf6;">--</div>
+                                        </div>
+                                        <div style="text-align:center;">
+                                            <div style="font-size:12px; color:#6b7280;">仓位约束</div>
+                                            <div id="temp-stats-pos" style="font-size:16px; font-weight:bold; color:#10b981;">--</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 交易明细表格 -->
+                                <div>
+                                    <h5 style="margin-bottom:12px; color:#374151; font-size:14px;">交易明细</h5>
+                                    <div class="table-container" style="border:1px solid #e5e7eb; border-radius:6px; overflow:hidden;">
+                                        <table class="data-table" id="backtest-trades-table" aria-label="回测交易明细表">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">股票代码</th>
+                                                    <th scope="col">股票名称</th>
+                                                    <th scope="col">买入日期</th>
+                                                    <th scope="col">卖出日期</th>
+                                                    <th scope="col">持有天数</th>
+                                                    <th scope="col">收益率</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="backtest-trades-body">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

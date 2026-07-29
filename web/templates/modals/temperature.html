@@ -1,0 +1,115 @@
+<div id="temperature-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="temperature-modal-title">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="temperature-modal-title">🌡️ 市场温度详情</h3>
+                <button class="modal-close" onclick="closeTemperatureModal()" aria-label="关闭市场温度详情">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 温度概览 -->
+                <div class="modal-section">
+                    <h4>市场温度概览</h4>
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <label>交易日期</label>
+                            <span id="modal-temp-date">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>综合温度</label>
+                            <span id="modal-temperature" class="temp-value-lg">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>市场状态</label>
+                            <span id="modal-temp-status" class="temp-badge-lg">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>仓位系数</label>
+                            <span id="modal-position-ratio">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>狩猎场规则</label>
+                            <span id="modal-action">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 各维度得分 -->
+                <div class="modal-section">
+                    <h4>各维度得分</h4>
+                    <div class="grid-2">
+                        <div class="score-box">
+                            <label>涨跌家数比</label>
+                            <div class="score-bar-container">
+                                <div id="score-up-down" class="score-bar" style="width: 0%"></div>
+                            </div>
+                            <span id="score-up-down-value">-</span>
+                        </div>
+                        <div class="score-box">
+                            <label>跌停家数</label>
+                            <div class="score-bar-container">
+                                <div id="score-limit-down" class="score-bar" style="width: 0%"></div>
+                            </div>
+                            <span id="score-limit-down-value">-</span>
+                        </div>
+                        <div class="score-box">
+                            <label>涨停表现</label>
+                            <div class="score-bar-container">
+                                <div id="score-limit-up" class="score-bar" style="width: 0%"></div>
+                            </div>
+                            <span id="score-limit-up-value">-</span>
+                        </div>
+                        <div class="score-box">
+                            <label>成交额</label>
+                            <div class="score-bar-container">
+                                <div id="score-volume" class="score-bar" style="width: 0%"></div>
+                            </div>
+                            <span id="score-volume-value">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 原始数据 -->
+                <div class="modal-section">
+                    <h4>原始数据</h4>
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <label>上涨家数</label>
+                            <span id="modal-up-count">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>下跌家数</label>
+                            <span id="modal-down-count">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>跌停家数</label>
+                            <span id="modal-limit-down-count">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>涨停平均涨幅</label>
+                            <span id="modal-avg-limit-up">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>总成交额</label>
+                            <span id="modal-total-volume">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>成交量/MA5</label>
+                            <span id="modal-volume-ma5">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 温度历史趋势图表 -->
+                <div class="modal-section">
+                    <h4>近30天温度趋势</h4>
+                    <div class="chart-container">
+                        <canvas id="temperature-trend-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="refreshTemperatureData()">刷新数据</button>
+                <button class="btn btn-warning" onclick="recalculateTemperatureData()">重新计算当日温度</button>
+                <button class="btn btn-secondary" onclick="closeTemperatureModal()">关闭</button>
+            </div>
+        </div>
+    </div>

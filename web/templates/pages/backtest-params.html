@@ -1,0 +1,34 @@
+<div id="backtest-params-page" class="page">
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
+                                <div>
+                                    <label for="params-initial-capital" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">初始资金</label>
+                                    <input class="form-control" type="number" id="params-initial-capital" style="width:100%;" min="10000" step="10000" value="1000000" aria-label="初始资金">
+                                </div>
+                                <div>
+                                    <label for="params-score-threshold" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">评分阈值</label>
+                                    <input class="form-control" type="number" id="params-score-threshold" style="width:100%;" min="0" max="100" step="1" value="60" aria-label="评分阈值">
+                                </div>
+                                <div>
+                                    <label for="params-buy-amount" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">买入金额</label>
+                                    <input class="form-control" type="number" id="params-buy-amount" style="width:100%;" min="1000" step="1000" value="100000" aria-label="买入金额">
+                                </div>
+                                <div>
+                                    <label for="params-max-daily-buys" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">每日最大买入数</label>
+                                    <input class="form-control" type="number" id="params-max-daily-buys" style="width:100%;" min="1" max="20" step="1" value="5" aria-label="每日最大买入数">
+                                </div>
+                                <div>
+                                    <label for="params-stop-loss" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">止损比例</label>
+                                    <input class="form-control" type="number" id="params-stop-loss" style="width:100%;" min="0.01" max="0.5" step="0.01" value="0.05" aria-label="止损比例">
+                                </div>
+                                <div>
+                                    <label for="params-take-profit" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">止盈比例</label>
+                                    <input class="form-control" type="number" id="params-take-profit" style="width:100%;" min="0.01" max="1" step="0.01" value="0.15" aria-label="止盈比例">
+                                </div>
+                            </div>
+                            
+                            <button type="button" id="save-backtest-params-btn" class="btn btn-primary" style="padding:6px 16px; font-size:12px; margin-top: 16px;" aria-label="保存回测配置">保存配置</button>
+                        </div>
+                    </div>
+                </div>

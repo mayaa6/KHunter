@@ -1,0 +1,61 @@
+<div id="history-page" class="page">
+                    <div class="card">
+                        <div class="card-header">
+                        </div>
+                        
+                        <!-- 筛选条件 -->
+                        <div class="filter-section" style="background: #f9fafb; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 10px;">
+                                <div>
+                                    <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 5px;">选股方案</label>
+                                    <select class="form-control" id="history-strategy-filter" style="width: 100%;">
+                                        <option value="">全部策略</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 5px;">开始日期</label>
+                                    <input class="form-control" type="date" id="history-start-date" style="width: 100%;">
+                                </div>
+                                <div>
+                                    <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 5px;">结束日期</label>
+                                    <input class="form-control" type="date" id="history-end-date" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary" onclick="searchSelectionHistory()" style="padding: 6px 12px; font-size: 12px;">🔍 查询</button>
+                                <button class="btn btn-secondary" onclick="resetHistoryFilters()" style="padding: 6px 12px; font-size: 12px;">↺ 重置</button>
+                            </div>
+                        </div>
+                        
+                        <!-- 结果统计 -->
+                        <div id="history-stats" style="display: none; background: #f0f9ff; padding: 10px; border-left: 4px solid #0284c7; border-radius: 4px; margin-bottom: 15px; font-size: 12px;">
+                            <span>总记录: <strong id="history-total">0</strong> | 当前页: <strong id="history-current-page">1</strong> / <strong id="history-total-pages">1</strong></span>
+                        </div>
+                        
+                        <!-- 表格 -->
+                        <div class="table-container">
+                            <table class="data-table" id="history-table" style="display: none;">
+                                <thead>
+                                    <tr>
+                                        <th>选股方案</th>
+                                        <th>股票代码</th>
+                                        <th>股票名称</th>
+                                        <th>选入日期</th>
+                                        <th>选入价格</th>
+                                        <th>当前价格</th>
+                                        <th>最高/最低</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-tbody">
+                                </tbody>
+                            </table>
+                            <div id="history-empty" style="text-align: center; padding: 40px; color: #6b7280;">
+                                <p>暂无数据，请调整筛选条件后重试</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 分页 -->
+                        <div id="history-pagination" style="display: none; text-align: center; margin-top: 15px; font-size: 12px;">
+                        </div>
+                    </div>
+                </div>

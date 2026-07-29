@@ -310,7 +310,7 @@ export function cleanupBacktestPage() {
 
     const modal = document.getElementById('backtest-result-modal');
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
 }
 
@@ -960,7 +960,7 @@ export function viewBacktestResult(resultId) {
     // 显示模态框
     const modal = document.getElementById('backtest-result-modal');
     if (modal) {
-        modal.style.display = 'block';
+        modal.classList.add('active');
     }
     
     // 加载回测结果到模态框
@@ -973,7 +973,7 @@ export function viewBacktestResult(resultId) {
 export function closeBacktestModal() {
     const modal = document.getElementById('backtest-result-modal');
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
 }
 

@@ -194,14 +194,13 @@ const StrategyRunnerModule = {
             const result = await response.json();
             
             if (result.success && result.strategies) {
-                // 更新所有择时策略选择器
-                const timingSelects = document.querySelectorAll('select[id="timing-strategy"]');
-                timingSelects.forEach(select => {
-                    const selectedValue = select.value;
-                    select.innerHTML = result.strategies.map(strategy => 
+                const timingSelect = document.getElementById('runner-timing-strategy');
+                if (timingSelect) {
+                    const selectedValue = timingSelect.value;
+                    timingSelect.innerHTML = result.strategies.map(strategy =>
                         `<option value="${strategy.name}" ${strategy.name === selectedValue ? 'selected' : ''}>${strategy.display_name || strategy.name}</option>`
                     ).join('');
-                });
+                }
             }
         } catch (error) {
             console.error('加载择时策略失败:', error);
@@ -231,7 +230,7 @@ const StrategyRunnerModule = {
             }
         }
         
-        const timingSelect = document.getElementById('timing-strategy');
+        const timingSelect = document.getElementById('runner-timing-strategy');
         // 如果提供了择时策略，使用它；否则从下拉框获取
         const finalTimingStrategy = timingStrategy || timingSelect.value;
         

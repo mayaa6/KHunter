@@ -1,0 +1,98 @@
+<div id="dashboard-page" class="page active">
+                    <div class="stats-grid" id="init-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-info">
+                                <h3 id="stat-stocks">-</h3>
+                                <p>股票数量</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <h3 id="stat-date">-</h3>
+                                <p>最新数据</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-info">
+                                <h3 id="stat-strategies">-</h3>
+                                <p>策略数量</p>
+                            </div>
+                        </div>
+                        <!-- 风控指标卡片 -->
+                        <div class="stat-card risk-stat-card" onclick="openRiskModal()">
+                            <div class="stat-icon">🛡️</div>
+                            <div class="stat-info">
+                                <h3 id="stat-var" class="var-display">-</h3>
+                                <span id="stat-risk-level" class="risk-badge">-</span>
+                            </div>
+                            <div class="stat-arrow">→</div>
+                        </div>
+                        <!-- 市场温度卡片 -->
+                        <div class="stat-card temp-stat-card" onclick="openTemperatureModal()">
+                            <div class="stat-icon">🌡️</div>
+                            <div class="stat-info">
+                                <div class="temp-main-row">
+                                    <h3 id="stat-temperature" class="temp-display">-</h3>
+                                    <span id="stat-temp-status" class="temp-badge">-</span>
+                                </div>
+                                <div id="stat-temp-action" class="temp-action">-</div>
+                            </div>
+                            <div class="stat-arrow">→</div>
+                        </div>
+                    </div>
+
+                    <!-- 我的金股 -->
+                    <div id="my-golden-stocks-card" class="card">
+                        <h3>🏆 我的金股</h3>
+                        <div id="my-golden-stocks-content" class="card-body">
+                            <p class="text-muted">暂无金股数据</p>
+                        </div>
+                    </div>
+
+                    <!-- 最热行业 -->
+                    <div id="hot-industries-card" class="card">
+                        <h3>📊 最热行业</h3>
+                        <div id="hot-industries-content" class="card-body">
+                            <p class="text-muted">暂无行业数据</p>
+                        </div>
+                    </div>
+
+                    <!-- 最热板块 -->
+                    <div id="hot-areas-card" class="card">
+                        <h3>📍 最热板块</h3>
+                        <div id="hot-areas-content" class="card-body">
+                            <p class="text-muted">暂无板块数据</p>
+                        </div>
+                    </div>
+
+                    <!-- 数据更新进度 -->
+                    <div id="update-progress-card" class="card" style="display: none;">
+                        <h3>📊 数据更新进度</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span id="progress-text">准备中...</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                        </div>
+                        <div class="update-stats">
+                            <div class="stat-item">
+                                <span class="label">成功:</span>
+                                <span id="update-success" class="value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">失败:</span>
+                                <span id="update-failed" class="value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="label">状态:</span>
+                                <span id="update-message" class="value">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>

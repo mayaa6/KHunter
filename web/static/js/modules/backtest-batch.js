@@ -173,8 +173,8 @@ class BacktestUIManager {
       // 执行进度
       progressContainer: document.getElementById('backtest-progress-container'),
       currentTaskInfo: document.getElementById('current-task-info'),
-      progressFill: document.getElementById('progress-fill'),
-      progressPercent: document.getElementById('progress-percent'),
+      progressFill: document.getElementById('backtest-progress-fill'),
+      progressPercent: document.getElementById('backtest-progress-percent'),
       remainingTime: document.getElementById('remaining-time'),
       pauseBtn: document.getElementById('pause-btn'),
       continueBtn: document.getElementById('continue-btn'),

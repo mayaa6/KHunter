@@ -1,0 +1,50 @@
+<div id="strategies-page" class="page">
+                    <!-- 策略列表视图 -->
+                    <div id="strategies-list-view">
+                        <div class="strategies-grid" id="strategies-grid">
+                            <!-- 动态生成策略卡片 -->
+                        </div>
+                    </div>
+
+                    <!-- 策略详情视图 -->
+                    <div id="strategies-detail-view" style="display: none;">
+                        <button class="btn btn-secondary" onclick="backToStrategyList()" style="margin-bottom: 20px;">
+                            <span class="icon">←</span> 返回列表
+                        </button>
+                        <div class="card">
+                            <div class="strategy-detail-header">
+                                <div class="strategy-detail-title">
+                                    <span id="detail-icon" class="strategy-icon"></span>
+                                    <div>
+                                        <h2 id="detail-name"></h2>
+                                        <p id="detail-description" class="text-muted"></p>
+                                    </div>
+                                </div>
+                                <div id="detail-color" class="strategy-color-indicator"></div>
+                            </div>
+
+                            <div class="strategy-detail-content">
+                                <div class="detail-section">
+                                    <h4>策略原理</h4>
+                                    <p id="detail-principle"></p>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>参数配置</h4>
+                                    <div id="strategy-params-form">
+                                        <!-- 动态生成参数表单 -->
+                                    </div>
+                                </div>
+
+                                <div class="detail-actions" style="display: flex; gap: 12px; margin-top: 20px;">
+                                    <button class="btn btn-primary" onclick="saveStrategyParams()">
+                                        <span class="icon">💾</span> 保存参数
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetStrategyParams()">
+                                        <span class="icon">🔄</span> 恢复默认
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

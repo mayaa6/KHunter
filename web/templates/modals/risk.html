@@ -1,0 +1,75 @@
+<div id="risk-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="risk-modal-title">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="risk-modal-title">🛡️ 风控状态详情</h3>
+                <button class="modal-close" onclick="closeRiskModal()" aria-label="关闭风控详情">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 风控指标详情 -->
+                <div class="modal-section">
+                    <h4>风险指标</h4>
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <label>日期</label>
+                            <span id="modal-risk-date">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>风险等级</label>
+                            <span id="modal-risk-level" class="risk-badge-lg">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>VaR(1日)</label>
+                            <span id="modal-var-1d" class="var-value">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>VaR(5日)</label>
+                            <span id="modal-var-5d" class="var-value">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>ES(1日)</label>
+                            <span id="modal-es-1d" class="var-value">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>策略状态</label>
+                            <span id="modal-strategy-enabled" class="strategy-status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 风控参数 -->
+                <div class="modal-section">
+                    <h4>风控参数</h4>
+                    <div class="grid-2">
+                        <div class="info-box">
+                            <label>仓位上限</label>
+                            <span id="modal-position-limit">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>止损倍数</label>
+                            <span id="modal-stop-loss-multiplier">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>额外分数门槛</label>
+                            <span id="modal-score-extra">-</span>
+                        </div>
+                        <div class="info-box">
+                            <label>强制清仓</label>
+                            <span id="modal-liquidate" class="liquidate-status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 风险等级历史趋势图表 -->
+                <div class="modal-section">
+                    <h4>近30天风险趋势</h4>
+                    <div class="chart-container">
+                        <canvas id="risk-trend-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="refreshRiskData()">刷新数据</button>
+                <button class="btn btn-secondary" onclick="closeRiskModal()">关闭</button>
+            </div>
+        </div>
+    </div>

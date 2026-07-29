@@ -1,0 +1,89 @@
+<div id="data-init-page" class="page">
+                    <!-- 步骤1：选择初始化范围 -->
+                    <div id="init-step1" class="card" style="display: block;">
+                        <div class="card-body">
+                            <!-- 初始化选项 -->
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; transition: all 0.2s;">
+                                    <input type="checkbox" id="init-basic-data" checked style="width: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">基础股票数据</div>
+                                        <div style="font-size: 12px; color: #6b7280;">股票代码、名称、行业等基础信息</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; transition: all 0.2s;">
+                                    <input type="checkbox" id="init-history-data" checked style="width: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">历史行情数据</div>
+                                        <div style="font-size: 12px; color: #6b7280;">股票的日线行情数据</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; transition: all 0.2s;">
+                                    <input type="checkbox" id="init-industry-data" checked style="width: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">行业数据</div>
+                                        <div style="font-size: 12px; color: #6b7280;">行业分类和行业资金流向数据</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; transition: all 0.2s;">
+                                    <input type="checkbox" id="init-sector-data" checked style="width: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">板块数据</div>
+                                        <div style="font-size: 12px; color: #6b7280;">板块分类和板块资金流向数据</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: #f9fafb; border-radius: 6px; border: 2px solid #e5e7eb; transition: all 0.2s;">
+                                    <input type="checkbox" id="init-fund-flow-data" checked style="width: 20px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1f2937;">资金流向数据</div>
+                                        <div style="font-size: 12px; color: #6b7280;">个股资金流向数据（30个交易日）</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- 操作按钮 -->
+                            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <button class="btn btn-secondary" onclick="resetInitForm()">重置</button>
+                                <button class="btn btn-primary" onclick="startInitialization()">开始初始化</button>
+                                <button class="btn btn-danger" onclick="startReinit()">重新初始化</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 步骤2：初始化进行中 -->
+                    <div id="init-step2" class="card" style="display: none;">
+                        <div class="card-body">
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 48px; margin-bottom: 20px;">⏳</div>
+                                <p style="font-size: 16px; color: #6b7280; margin: 0;">正在初始化数据，请稍候...</p>
+                            </div>
+                            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <button class="btn btn-danger" onclick="cancelInitialization()">取消</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 步骤3：初始化完成 -->
+                    <div id="init-step3" class="card" style="display: none;">
+                        <div class="card-body">
+                            <!-- 完成状态 -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div id="init-status-icon" style="font-size: 48px; margin-bottom: 10px;">✓</div>
+                                <h2 id="init-status-text" style="margin: 0; color: #10b981;">初始化成功！</h2>
+                            </div>
+
+                            <!-- 结果统计 -->
+                            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-top: 0; margin-bottom: 15px;">初始化结果</h4>
+                                <div id="init-result-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                    <!-- 动态生成统计项 -->
+                                </div>
+                            </div>
+
+                            <!-- 操作按钮 -->
+                            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <button class="btn btn-secondary" onclick="backToInitStep1()">返回</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>

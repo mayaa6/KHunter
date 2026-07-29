@@ -1,0 +1,18 @@
+<header class="header">
+                <h2 id="page-title">系统概览</h2>
+                <div class="header-actions">
+                    <!-- 账户选择器 -->
+                    <div class="account-selector" id="account-selector-container" style="display: none;">
+                        <select id="account-selector" class="account-select form-control" onchange="switchAccount()">
+                            <option value="">加载账户中...</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="run-selection-btn">
+                        <span class="icon">▶️</span> 执行选股
+                    </button>
+                    <span class="status-indicator" id="status-indicator">
+                        <span class="dot green"></span> 就绪
+                    </span>
+                </div>
+            </header>

@@ -46,14 +46,13 @@ async function loadTimingStrategies() {
         const result = await response.json();
         
         if (result.success && result.strategies) {
-            // 更新所有择时策略选择器
-            const timingSelects = document.querySelectorAll('select[id="timing-strategy"]');
-            timingSelects.forEach(select => {
-                const selectedValue = select.value;
-                select.innerHTML = result.strategies.map(strategy => 
+            const timingSelect = document.getElementById('timing-strategy');
+            if (timingSelect) {
+                const selectedValue = timingSelect.value;
+                timingSelect.innerHTML = result.strategies.map(strategy =>
                     `<option value="${strategy.name}" ${strategy.name === selectedValue ? 'selected' : ''}>${strategy.display_name || strategy.name}</option>`
                 ).join('');
-            });
+            }
             
             // 更新回测配置页面的择时策略选择器
             const backtestSelect = document.getElementById('backtest-timing-strategy');
@@ -319,7 +318,7 @@ function showPlanModal(planData) {
     }
     
     // 5. 显示模态窗口
-    document.getElementById('plan-modal').style.display = 'block';
+    document.getElementById('plan-modal').classList.add('active');
 }
 
 /**
@@ -390,7 +389,7 @@ function displayTemperatureSuggestion(tempInfo, tempConstraints) {
  * 关闭交易计划模态窗口
  */
 function closePlanModal() {
-    document.getElementById('plan-modal').style.display = 'none';
+    document.getElementById('plan-modal').classList.remove('active');
 }
 
 /**
@@ -630,7 +629,7 @@ function openStockDetail(stockCode) {
  * 关闭股票详情模态窗口
  */
 function closeStockDetailModal() {
-    document.getElementById('stock-detail-modal').style.display = 'none';
+    document.getElementById('stock-detail-modal').classList.remove('active');
 }
 
 /**
@@ -661,7 +660,7 @@ function openScoreDetail(stockCode, scoreDate) {
  * 关闭评分详情模态窗口
  */
 function closeScoreDetailModal() {
-    document.getElementById('score-detail-modal').style.display = 'none';
+    document.getElementById('score-detail-modal').classList.remove('active');
 }
 
 /**

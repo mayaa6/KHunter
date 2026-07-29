@@ -1,0 +1,49 @@
+<div id="backtest-history-page" class="page">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- 筛选条件 -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:15px; margin-bottom:24px;">
+                                <div>
+                                    <label for="backtest-history-strategy-filter" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">策略选择</label>
+                                    <select class="form-control" id="backtest-history-strategy-filter" style="width:100%;">
+                                        <option value="" disabled selected>请选择策略</option>
+                                        <option value="">全部策略</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="history-date" style="font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:5px;">执行日期</label>
+                                    <input class="form-control" type="date" id="history-date" style="width:100%;">
+                                </div>
+                                <div style="align-self:flex-end;">
+                                    <button class="btn btn-primary" onclick="searchBacktestHistory()" style="padding:6px 16px; font-size:12px; width:100%;">查询</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 历史记录表格 -->
+                            <div class="table-container">
+                                <table class="data-table" id="backtest-history-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">策略名称</th>
+                                            <th scope="col">择时策略</th>
+                                            <th scope="col">开始日期</th>
+                                            <th scope="col">结束日期</th>
+                                            <th scope="col">回测时间</th>
+                                            <th scope="col">总收益率</th>
+                                            <th scope="col">胜率</th>
+                                            <th scope="col">盈亏比</th>
+                                            <th scope="col">最大回撤</th>
+                                            <th scope="col">夏普比率</th>
+                                            <th scope="col">操作</th>
+                                            <th scope="col">导出</th>
+                                            <th scope="col">删除</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="backtest-history-body">
+                                        <tr><td colspan="13" class="loading">加载中...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>

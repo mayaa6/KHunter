@@ -1,0 +1,136 @@
+<div id="score-detail-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="score-detail-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="score-detail-title">评分明细</h3>
+                <button class="close-btn" onclick="closeScoreDetailModal()" aria-label="关闭评分明细">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="score-detail-content">
+                    <!-- 五维度评分卡片网格 -->
+                    <div class="analysis-grid score-dimension-grid" style="margin-bottom: 30px;">
+                        <!-- 技术面评分卡片 -->
+                        <div class="analysis-card" role="article" aria-label="技术面评分">
+                            <h4>📐 技术面评分 <span style="font-size:12px; color:#6b7280; font-weight:normal;">权重 35%</span></h4>
+                            <div class="analysis-content">
+                                <div style="text-align:center; padding:12px 0; border-bottom:1px solid #f0f0f0; margin-bottom:12px;">
+                                    <span id="modal-dim-technical-score" style="font-size:32px; font-weight:bold; color:#2196F3;">0</span>
+                                    <span style="font-size:14px; color:#999; margin-left:4px;">分</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">命中策略</span>
+                                    <span id="modal-dim-technical-strategies" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">一票否决</span>
+                                    <span id="modal-dim-technical-veto" class="metric-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 资金面评分卡片 -->
+                        <div class="analysis-card" role="article" aria-label="资金面评分">
+                            <h4>💰 资金面评分 <span style="font-size:12px; color:#6b7280; font-weight:normal;">权重 35%</span></h4>
+                            <div class="analysis-content">
+                                <div style="text-align:center; padding:12px 0; border-bottom:1px solid #f0f0f0; margin-bottom:12px;">
+                                    <span id="modal-dim-moneyflow-score" style="font-size:32px; font-weight:bold; color:#2196F3;">0</span>
+                                    <span style="font-size:14px; color:#999; margin-left:4px;">分</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">主力净流入</span>
+                                    <span id="modal-dim-moneyflow-main-net" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">大单占比</span>
+                                    <span id="modal-dim-moneyflow-large-ratio" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">北向资金</span>
+                                    <span id="modal-dim-moneyflow-north-fund" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">主力散户方向</span>
+                                    <span id="modal-dim-moneyflow-direction" class="metric-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 基本面评分卡片 -->
+                        <div class="analysis-card" role="article" aria-label="基本面评分">
+                            <h4>📋 基本面评分 <span style="font-size:12px; color:#6b7280; font-weight:normal;">权重 10%</span></h4>
+                            <div class="analysis-content">
+                                <div style="text-align:center; padding:12px 0; border-bottom:1px solid #f0f0f0; margin-bottom:12px;">
+                                    <span id="modal-dim-fundamental-score" style="font-size:32px; font-weight:bold; color:#2196F3;">0</span>
+                                    <span style="font-size:14px; color:#999; margin-left:4px;">分</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">净利润增速</span>
+                                    <span id="modal-dim-fundamental-profit-yoy" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">ROE</span>
+                                    <span id="modal-dim-fundamental-roe" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">经营现金流</span>
+                                    <span id="modal-dim-fundamental-ocf" class="metric-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 板块强度评分卡片 -->
+                        <div class="analysis-card" role="article" aria-label="板块强度评分">
+                            <h4>🏢 板块强度评分 <span style="font-size:12px; color:#6b7280; font-weight:normal;">权重 10%</span></h4>
+                            <div class="analysis-content">
+                                <div style="text-align:center; padding:12px 0; border-bottom:1px solid #f0f0f0; margin-bottom:12px;">
+                                    <span id="modal-dim-sector-score" style="font-size:32px; font-weight:bold; color:#2196F3;">0</span>
+                                    <span style="font-size:14px; color:#999; margin-left:4px;">分</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">板块名称</span>
+                                    <span id="modal-dim-sector-name" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">涨幅排名</span>
+                                    <span id="modal-dim-sector-rank-score" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">资金流向</span>
+                                    <span id="modal-dim-sector-moneyflow-score" class="metric-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 事件驱动评分卡片 -->
+                        <div class="analysis-card" role="article" aria-label="事件驱动评分">
+                            <h4>📅 事件驱动评分 <span style="font-size:12px; color:#6b7280; font-weight:normal;">权重 10%</span></h4>
+                            <div class="analysis-content">
+                                <div style="text-align:center; padding:12px 0; border-bottom:1px solid #f0f0f0; margin-bottom:12px;">
+                                    <span id="modal-dim-event-score" style="font-size:32px; font-weight:bold; color:#2196F3;">0</span>
+                                    <span style="font-size:14px; color:#999; margin-left:4px;">分</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">正面事件</span>
+                                    <span id="modal-dim-event-positive" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">负面事件</span>
+                                    <span id="modal-dim-event-negative" class="metric-value">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">一票否决</span>
+                                    <span id="modal-dim-event-veto" class="metric-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeScoreDetailModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>

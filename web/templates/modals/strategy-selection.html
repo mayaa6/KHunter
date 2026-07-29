@@ -1,0 +1,38 @@
+<div id="strategy-selection-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="strategy-selection-title">
+        <div class="modal-content strategy-selection-dialog">
+            <div class="modal-header">
+                <h3 id="strategy-selection-title">选择执行策略</h3>
+                <button class="close-btn" onclick="closeStrategyModal()" aria-label="关闭策略选择">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 隐藏的逻辑选择器，默认使用 OR -->
+                <input type="hidden" name="logic" value="or">
+
+                <div class="strategy-selection-toolbar">
+                    <div class="date-selector">
+                        <label for="selection-date">选股日期</label>
+                        <input class="form-control" type="date" id="selection-date" value="">
+                    </div>
+                    <div class="strategy-selection-actions">
+                        <span id="strategy-selection-count" class="strategy-selection-count">已选 0 项</span>
+                        <button
+                            id="select-all-strategies-btn"
+                            class="btn btn-sm strategy-select-all-btn"
+                            type="button"
+                            onclick="selectAllStrategies()"
+                            aria-pressed="false"
+                        >全选</button>
+                    </div>
+                </div>
+                <div class="strategy-list" id="strategy-list">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeStrategyModal()" style="flex: 1;">取消</button>
+                    <button class="btn btn-primary" onclick="confirmStrategySelection()" style="flex: 1;">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>

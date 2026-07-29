@@ -1,0 +1,72 @@
+<div id="plan-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">📋 交易计划</h2>
+                <button id="close-modal" class="close-btn" aria-label="关闭交易计划">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 基本信息 -->
+                <div class="info-section">
+                    <h3>基本信息</h3>
+                    <div class="info-grid" style="display: flex; gap: 40px; align-items: center; flex-wrap: nowrap;">
+                        <div class="info-item" style="display: flex; flex-direction: row; align-items: center; gap: 10px; white-space: nowrap;">
+                            <label style="white-space: nowrap;">狩猎日期：</label>
+                            <span id="modal-hunting-date" style="white-space: nowrap;"></span>
+                        </div>
+                        <div class="info-item" style="display: flex; flex-direction: row; align-items: center; gap: 10px; white-space: nowrap;">
+                            <label style="white-space: nowrap;">计划交易日期：</label>
+                            <span id="modal-plan-date" style="white-space: nowrap;"></span>
+                        </div>
+                        <div class="info-item" style="display: flex; flex-direction: row; align-items: center; gap: 10px; white-space: nowrap;">
+                            <label style="white-space: nowrap;">股票数量：</label>
+                            <span id="modal-stock-count" style="white-space: nowrap;"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 温度建议区域 -->
+                <div id="temp-suggestion-container" class="plan-info-area" style="margin: 16px 0;">
+                    <!-- 由JS动态填充 -->
+                </div>
+                
+                <!-- 交易计划预览 -->
+                <div class="plan-preview-section">
+                    <h3>交易计划预览</h3>
+                    <div class="table-container">
+                        <table id="plan-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>代码</th>
+                                    <th>名称</th>
+                                    <th>当前价格</th>
+                                    <th>买入价格区间</th>
+                                    <th>仓位</th>
+                                    <th>止损</th>
+                                    <th>止盈</th>
+                                    <th>择时策略</th>
+                                </tr>
+                            </thead>
+                            <tbody id="plan-tbody">
+                                <tr><td colspan="9" class="placeholder">加载中...</td></tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 风险提示 -->
+                <div class="risk-section">
+                    <h3>风险提示</h3>
+                    <div class="risk-content">
+                        <p>⚠️ 交易计划仅供参考，不构成投资建议</p>
+                        <p>⚠️ 实际交易需根据市场情况灵活调整</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-plan" class="btn btn-secondary">取消</button>
+                <button id="confirm-plan" class="btn btn-primary">确认生成并导出Excel</button>
+            </div>
+        </div>
+    </div>
