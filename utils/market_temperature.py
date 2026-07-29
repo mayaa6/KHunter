@@ -13,12 +13,11 @@
 """
 
 import logging
-import json
-import os
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
 import pandas as pd
+
+from utils.market_data_provider import build_market_data_provider
 
 logger = logging.getLogger(__name__)
 
@@ -51,33 +50,20 @@ class MarketTemperature:
         (0, "极端", 0.0, "禁止任何买入")
     ]
     
-    def __init__(self, tushare_pro=None):
+    def __init__(self, market_data_provider=None):
         """
         初始化市场温度计算器
         
         Args:
-            tushare_pro: Tushare Pro API实例，如果为None则使用默认实例
+            market_data_provider: 提供 trade_cal、daily、index_daily 的行情对象。
+                为 None 时使用 BaoStock 优先、Tushare 降级的混合数据源。
+                仍兼容直接传入 Tushare Pro 客户端。
         """
-        self.tushare_pro = tushare_pro
-        if tushare_pro is None:
-            try:
-                import tushare as ts
-                token = os.getenv("TUSHARE_TOKEN")
-                config_path = Path(__file__).parent.parent / "config" / "tushare_config.json"
-                if not token and config_path.exists():
-                    with config_path.open("r", encoding="utf-8") as config_file:
-                        config = json.load(config_file)
-                    token = config.get("token") or config.get("api_key")
-
-                if token:
-                    self.tushare_pro = ts.pro_api(token)
-                else:
-                    logger.warning(
-                        "未配置 Tushare Token，市场温度计算不可用。"
-                        "请设置 TUSHARE_TOKEN 或 config/tushare_config.json"
-                    )
-            except Exception as e:
-                logger.warning(f"初始化Tushare失败: {e}")
+        self.tushare_pro = (
+            market_data_provider
+            if market_data_provider is not None
+            else build_market_data_provider()
+        )
     
     def calculate(self, trade_date: str, use_cache: bool = True,
                   skip_risk_eval: bool = False) -> Dict:
@@ -228,8 +214,7 @@ class MarketTemperature:
 
         if not self.tushare_pro:
             raise DataNotAvailableError(
-                "Tushare Pro 未配置，无法查询交易日历。"
-                "请在 .env 中设置 TUSHARE_TOKEN 后重启服务"
+                "没有可用的市场数据源，无法查询交易日历"
             )
 
         try:
@@ -266,7 +251,7 @@ class MarketTemperature:
         """
         try:
             if not self.tushare_pro:
-                raise DataNotAvailableError("Tushare Pro未初始化，无法获取涨跌家数数据")
+                raise DataNotAvailableError("没有可用的市场数据源，无法获取涨跌家数数据")
             
             # 使用daily接口获取当日所有股票行情
             df = self.tushare_pro.daily(trade_date=trade_date)
@@ -305,7 +290,7 @@ class MarketTemperature:
         """
         try:
             if not self.tushare_pro:
-                raise DataNotAvailableError("Tushare Pro未初始化，无法获取跌停家数数据")
+                raise DataNotAvailableError("没有可用的市场数据源，无法获取跌停家数数据")
             
             # 使用daily接口获取当日所有股票行情
             df = self.tushare_pro.daily(trade_date=trade_date)
@@ -342,7 +327,7 @@ class MarketTemperature:
         """
         try:
             if not self.tushare_pro:
-                raise DataNotAvailableError("Tushare Pro未初始化，无法获取涨停表现数据")
+                raise DataNotAvailableError("没有可用的市场数据源，无法获取涨停表现数据")
             
             # 获取前一交易日
             prev_trade_date = self._get_prev_trade_date(trade_date)
@@ -413,7 +398,7 @@ class MarketTemperature:
         """
         try:
             if not self.tushare_pro:
-                raise DataNotAvailableError("Tushare Pro未初始化，无法获取成交额数据")
+                raise DataNotAvailableError("没有可用的市场数据源，无法获取成交额数据")
             
             # 获取上证和深证的成交额（需要逐个获取再合并）
             total_volume = 0

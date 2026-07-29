@@ -27,11 +27,11 @@ def test_is_trading_day_reads_open_flag():
     assert MarketTemperature(closed_day).is_trading_day("20260725") is False
 
 
-def test_missing_tushare_config_is_not_reported_as_non_trading_day():
+def test_missing_market_data_provider_is_not_reported_as_non_trading_day():
     calculator = object.__new__(MarketTemperature)
     calculator.tushare_pro = None
 
-    with pytest.raises(DataNotAvailableError, match="Tushare Pro 未配置"):
+    with pytest.raises(DataNotAvailableError, match="没有可用的市场数据源"):
         calculator.calculate("20260728")
 
 

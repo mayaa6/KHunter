@@ -36,6 +36,7 @@ KHunter 是一套**开箱即用的A股量化交易系统**，集数据管理、�
 - **TickFlow批量API** - 免费高效的批量K线数据获取
 - **智能除权检测** - 基于前复权因子自动检测并重建除权K线
 - **多层降级机制** - TickFlow → 腾讯财经 自动切换
+- **混合温度数据源** - BaoStock 免费提供交易日历和市场行情，Tushare Pro 可选降级
 
 ## 📈 股票评分系统
 
@@ -342,15 +343,18 @@ docker run --rm \
 
 详细配置说明请参考各配置文件中的注释。
 
-### 市场温度与 Tushare
+### 市场温度混合数据源
 
-市场温度计算依赖 Tushare Pro 的交易日历和行情数据。推荐在根目录的 `.env` 中配置：
+市场温度默认按 `BaoStock → Tushare Pro` 的顺序获取交易日历、全市场日行情和指数成交额。BaoStock 无需 Token，因此未配置 Tushare 时仍可计算市场温度；如果 BaoStock 不可用且已配置 Tushare Token，系统会自动降级到 Tushare。
+
+Docker 用户可以在根目录 `.env` 中调整顺序并配置可选的 Tushare：
 
 ```dotenv
+MARKET_DATA_SOURCE_ORDER=baostock,tushare
 TUSHARE_TOKEN=你的_Tushare_Token
 ```
 
-也可以创建 `config/tushare_config.json`：
+本地非 Docker 运行可以设置同名环境变量，或创建 `config/tushare_config.json` 保存 Tushare Token：
 
 ```json
 {
@@ -358,13 +362,20 @@ TUSHARE_TOKEN=你的_Tushare_Token
 }
 ```
 
-环境变量的优先级高于配置文件。修改配置后需要重启服务。
+`TUSHARE_TOKEN` 环境变量的优先级高于配置文件。Docker 修改 `.env` 后需要重新创建容器：
+
+```bash
+docker compose up -d --force-recreate --no-build
+```
 
 市场温度模块会明确区分休市日和数据源异常：
 
 - 交易日历明确返回休市时，提示该日期不是交易日
-- Token 未配置、交易日历返回空数据或接口调用失败时，返回具体错误，不再误报为休市
+- 单个数据源失败时自动尝试下一个数据源
+- 所有数据源返回空数据或调用失败时，汇总具体错误，不再误报为休市
 - Web 端手动重新计算时使用浏览器本地日期，避免 UTC 时区转换导致日期偏移
+
+该混合适配目前用于市场温度。资金流、同花顺板块和高级事件评分仍需要 Tushare Pro；未配置 Token 时这些维度会按各模块现有的简化或降级逻辑运行。
 
 ## 🔄 智能数据更新
 
@@ -413,7 +424,7 @@ uv sync --frozen
 PYTHONPATH=. uv run --frozen pytest
 ```
 
-市场温度测试覆盖交易日/休市日识别、Tushare 未配置、空交易日历、接口异常和无效日期格式等场景。
+市场温度测试覆盖 BaoStock 字段与单位转换、数据源自动降级和缓存、交易日/休市日识别、空交易日历、接口异常及无效日期格式等场景。
 
 ## ⚠️ 免责声明
 1. **本项目仅供学习和研究使用**，不构成任何投资建议。

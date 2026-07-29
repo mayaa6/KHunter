@@ -15,6 +15,7 @@ services:
       DINGTALK_SECRET: ${DINGTALK_SECRET:-}
       EAST_MONEY_COOKIE: ${EAST_MONEY_COOKIE:-}
       TUSHARE_TOKEN: ${TUSHARE_TOKEN:-}
+      MARKET_DATA_SOURCE_ORDER: ${MARKET_DATA_SOURCE_ORDER:-baostock,tushare}
     volumes:
       - khunter-data:/app/data
       - khunter-logs:/app/logs
