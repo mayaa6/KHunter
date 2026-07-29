@@ -154,15 +154,22 @@ export async function executeSelectionWithStrategies(strategies, logic = 'or', s
     lastSelectionDate = selectionDate;
     
     const btn = document.getElementById('run-selection-btn');
+    const pageBtn = document.getElementById('selection-start-btn');
     const indicator = document.getElementById('status-indicator');
     
     btn.disabled = true;
     btn.innerHTML = '<span class="icon">⏳</span> 选股中...';
+    if (pageBtn) {
+        pageBtn.disabled = true;
+        pageBtn.innerHTML = '<span>正在扫描全市场…</span><span aria-hidden="true">⌁</span>';
+    }
     indicator.innerHTML = '<span class="dot yellow"></span> 运行中';
     
     // 切换到选股结果页
     import('./navigation.js').then(module => module.switchPage('selection'));
     document.getElementById('selection-results').innerHTML = '<p class="loading">正在执行选股策略，请稍候...</p>';
+    const nextStep = document.getElementById('selection-next-step');
+    if (nextStep) nextStep.hidden = true;
     
     console.log('选股请求开始', { strategies, logic, selectionDate });
     
@@ -258,7 +265,11 @@ export async function executeSelectionWithStrategies(strategies, logic = 'or', s
         }
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span class="icon">▶️</span> 执行选股';
+        btn.innerHTML = '<span class="icon">＋</span> 开始今日选股';
+        if (pageBtn) {
+            pageBtn.disabled = false;
+            pageBtn.innerHTML = '<span>重新运行选股</span><span aria-hidden="true">↗</span>';
+        }
         indicator.innerHTML = '<span class="dot green"></span> 就绪';
     }
 }
@@ -356,15 +367,15 @@ export function renderIntersectionAnalysis(analysis) {
  * 手动保存选股结果到数据库
  * 将缓存的选股数据发送到后端保存接口
  */
-export async function saveSelectionResults() {
+export async function saveSelectionResults({ quiet = false } = {}) {
     // 检查是否有可保存的数据
     if (!lastSelectionResults || !lastSelectionTime) {
-        window.AppToast.notify('没有可保存的选股结果，请先执行选股');
-        return;
+        if (!quiet) window.AppToast.notify('没有可保存的选股结果，请先执行选股');
+        return false;
     }
 
     const btn = document.getElementById('save-selection-btn');
-    if (!btn) return;
+    if (!btn) return false;
 
     // 按钮状态：保存中
     btn.disabled = true;
@@ -416,18 +427,45 @@ export async function saveSelectionResults() {
                 btn.disabled = false;
             }, 3000);
             console.log(msg);
+            return true;
         } else {
             // 保存失败
             window.AppToast.notify('保存失败: ' + (result.error || '未知错误'));
             btn.innerHTML = '<span class="icon">💾</span> 保存结果';
             btn.disabled = false;
+            return false;
         }
     } catch (error) {
         console.error('保存选股结果异常:', error);
         window.AppToast.notify('保存失败: ' + error.message);
         btn.innerHTML = '<span class="icon">💾</span> 保存结果';
         btn.disabled = false;
+        return false;
     }
+}
+
+/**
+ * 保存当前候选池，并把同一交易日带入排名页。
+ */
+export async function continueToRanking() {
+    const button = document.getElementById('continue-to-ranking-btn');
+    if (!button) return;
+
+    const original = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '正在保存候选池…';
+
+    const saved = await saveSelectionResults({ quiet: true });
+    if (!saved) {
+        button.disabled = false;
+        button.innerHTML = original;
+        return;
+    }
+
+    window.CoreFlow?.setDate(lastSelectionDate);
+    await window.CoreFlow?.go('stock-ranking', lastSelectionDate);
+    button.disabled = false;
+    button.innerHTML = original;
 }
 
 /**
@@ -521,6 +559,8 @@ export function renderSelectionResults(results, time, filterStats, strategyDispl
         container.innerHTML = '<p class="loading text-danger">选股结果数据格式错误</p>';
         return;
     }
+    // 渲染时只操作浅拷贝，保留原始结果供“一键保存并排名”使用。
+    results = { ...results };
     
     let html = '';
     let totalCount = 0;
@@ -756,6 +796,12 @@ export function renderSelectionResults(results, time, filterStats, strategyDispl
     }
     
     container.innerHTML = html;
+
+    const nextStep = document.getElementById('selection-next-step');
+    const resultCount = document.getElementById('selection-result-count');
+    if (nextStep) nextStep.hidden = totalCount <= 0;
+    if (resultCount) resultCount.textContent = totalCount;
+    window.CoreFlow?.setDate(lastSelectionDate);
     
     // 显示过滤统计信息
     if (filterStats && filterStats.enabled) {

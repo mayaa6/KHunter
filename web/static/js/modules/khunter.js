@@ -733,6 +733,11 @@ function showAlert(message, type = 'info') {
  */
 export async function initKHunterPage() {
     await initPage();
+    const flowDate = window.CoreFlow?.getDate();
+    const dateInput = document.getElementById('hunting-date');
+    if (flowDate && dateInput) {
+        dateInput.value = flowDate;
+    }
 }
 
 /**

@@ -1,100 +1,53 @@
-<div id="khunter-page" class="page">
-                    <!-- 顶部控制区 -->
-                    <div class="khunter-header card">
-                        <div class="card-body">
-                            <div class="khunter-controls" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                                <!-- 日期选择 -->
-                                <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex: 0 0 auto; min-width: 250px;">
-                                    <label for="hunting-date" style="white-space: nowrap;">狩猎日期</label>
-                                    <input type="date" id="hunting-date" class="form-control">
-                                </div>
-                                
-                                <!-- 跟踪天数 -->
-                                <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex: 0 0 auto; min-width: 200px;">
-                                    <label for="tracking-days" style="white-space: nowrap;">跟踪天数</label>
-                                    <input type="number" id="tracking-days" class="form-control" min="1" max="365" value="10">
-                                </div>
-                                
-                                <!-- 择时策略 -->
-                                <div class="form-group" style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex: 0 0 auto; min-width: 200px;">
-                                    <label for="timing-strategy" style="white-space: nowrap;">择时策略</label>
-                                    <select id="timing-strategy" class="form-control">
-                                        <!-- 动态加载策略列表 -->
-                                    </select>
-                                </div>
-                                
-                                <!-- 操作按钮 -->
-                                <div class="form-group" style="display: flex; flex-direction: row; gap: 10px; align-items: center; flex: 0 0 auto;">
-                                    <button id="calculate-btn" class="btn btn-primary">
-                                        <span class="icon">▶️</span> 计算
-                                    </button>
-                                    <button id="save-btn" class="btn btn-success" style="display: none;">
-                                        <span class="icon">💾</span> 保存
-                                    </button>
-                                    <button id="generate-plan-btn" class="btn btn-info" style="display: none;">
-                                        <span class="icon">📋</span> 生成交易计划
-                                    </button>
-                                    
-                                    <!-- 加载指示器 -->
-                                    <div id="loading-indicator" class="loading-indicator" style="display: none;">
-                                        <span class="spinner"></span>
-                                        <span>计算中...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 结果表格 -->
-                    <div class="khunter-content card">
-                        <div class="card-header">
-                            <h3>📊 分析结果</h3>
-                            <span id="result-summary" class="text-muted"></span>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-container">
-                                <table id="results-table" class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>股票代码</th>
-                                            <th>股票名称</th>
-                                            <th>行业</th>
-                                            <th>板块</th>
-                                            <th>买入区间</th>
-                                            <th>策略名称</th>
-                                            <th>择时策略</th>
-                                            <th>择时信号</th>
-                                            <th>选入日期</th>
-                                            <th>评分</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="results-tbody">
-                                        <tr><td colspan="10" class="placeholder">请选择日期并点击'计算'按钮开始分析</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
+<div id="khunter-page" class="page core-flow-page" data-core-step="khunter">
+    <section class="core-flow-hero hunt-hero">
+        <div class="core-flow-heading">
+            <span class="eyebrow">HUNTING GROUND · 第三步</span>
+            <h1>只在时机出现时出手</h1>
+            <p>排名决定看谁，择时信号决定何时行动。这里是从研究走向交易计划的最后一关。</p>
+        </div>
+        <nav class="core-stepper" aria-label="核心决策路径">
+            <button class="core-step is-complete" data-core-page="selection"><span>01</span><strong>选股</strong><small>发现候选</small></button>
+            <i></i>
+            <button class="core-step is-complete" data-core-page="stock-ranking"><span>02</span><strong>排名</strong><small>量化优先级</small></button>
+            <i></i>
+            <button class="core-step is-active" data-core-page="khunter"><span>03</span><strong>狩猎场</strong><small>确认时机</small></button>
+        </nav>
+    </section>
 
-                        </div>
-                    </div>
-                    
-                    <!-- 底部统计 -->
-                    <div class="khunter-footer card">
-                        <div class="card-body">
-                            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                                <div class="stat-item">
-                                    <span class="label">符合买点的股票总数：</span>
-                                    <span id="total-count" class="value">-</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">计算耗时：</span>
-                                    <span id="calculation-time" class="value">-</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="label">缓存状态：</span>
-                                    <span id="cache-status" class="value">-</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <section class="hunt-control-panel">
+        <div class="hunt-control-copy">
+            <span class="section-kicker">执行参数</span>
+            <h2>扫描买入窗口</h2>
+            <p>保持日期与上一步一致，选择择时模型后开始扫描。</p>
+        </div>
+        <div class="hunt-controls">
+            <label class="hunt-field"><span>狩猎日期</span><input type="date" id="hunting-date" class="form-control"></label>
+            <label class="hunt-field"><span>跟踪天数</span><input type="number" id="tracking-days" class="form-control" min="1" max="365" value="10"></label>
+            <label class="hunt-field"><span>择时策略</span><select id="timing-strategy" class="form-control"></select></label>
+            <button id="calculate-btn" class="btn core-primary-action hunt-run"><span>开始扫描</span><span>↗</span></button>
+        </div>
+        <div class="hunt-secondary-actions">
+            <div id="loading-indicator" class="loading-indicator" style="display:none;"><span class="spinner"></span><span>正在扫描买入窗口…</span></div>
+            <button id="save-btn" class="text-action" style="display:none;">保存结果</button>
+            <button id="generate-plan-btn" class="btn core-next-button" style="display:none;">生成交易计划 <span>→</span></button>
+        </div>
+    </section>
+
+    <section class="core-workspace hunt-results">
+        <div class="core-section-head">
+            <div><span class="section-kicker">行动清单</span><h2>买点扫描结果</h2></div>
+            <span id="result-summary" class="text-muted">尚未扫描</span>
+        </div>
+        <div class="hunt-stat-strip">
+            <div><span id="total-count">—</span><small>符合买点</small></div>
+            <div><span id="calculation-time">—</span><small>计算耗时</small></div>
+            <div><span id="cache-status">—</span><small>数据状态</small></div>
+        </div>
+        <div class="table-container">
+            <table id="results-table" class="data-table">
+                <thead><tr><th>代码</th><th>名称</th><th>行业</th><th>板块</th><th>买入区间</th><th>形态策略</th><th>择时策略</th><th>择时信号</th><th>选入日期</th><th>评分</th></tr></thead>
+                <tbody id="results-tbody"><tr><td colspan="10" class="placeholder">完成前两步后，点击“开始扫描”确认买入时机</td></tr></tbody>
+            </table>
+        </div>
+    </section>
+</div>

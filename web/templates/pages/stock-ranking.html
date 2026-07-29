@@ -1,30 +1,44 @@
-<div id="stock-ranking-page" class="page">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-row" style="margin-bottom: 20px;">
-                                <div class="form-group" style="flex: 0 0 auto; width: 120px;">
-                                    <label for="stock-ranking-date">选股日期</label>
-                                    <input type="date" id="stock-ranking-date" class="form-control" style="width: 100%;">
-                                </div>
-                                <div class="form-group" style="flex: 0 0 auto;">
-                                    <label style="display: block; height: 1px; opacity: 0;">生成</label>
-                                    <button class="btn btn-primary" id="generate-ranking-btn">
-                                        <span id="generate-btn-text">生成排名</span>
-                                        <span id="generate-loading" class="loading-spinner" style="display:none;">⏳</span>
-                                    </button>
-                                </div>
-                                <div class="form-group" style="flex: 0 0 auto;">
-                                    <label style="display: block; height: 1px; opacity: 0;">重新生成</label>
-                                    <button class="btn btn-danger" id="force-regenerate-ranking-btn" title="强制重新计算所有股票的评分">
-                                        <span id="force-regenerate-btn-text">重新生成</span>
-                                        <span id="force-regenerate-loading" class="loading-spinner" style="display:none;">⏳</span>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- 结果区域 -->
-                            <div id="stock-ranking-result">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div id="stock-ranking-page" class="page core-flow-page" data-core-step="stock-ranking">
+    <section class="core-flow-hero ranking-hero">
+        <div class="core-flow-heading">
+            <span class="eyebrow">PRIORITY BOARD · 第二步</span>
+            <h1>把候选池压缩成行动清单</h1>
+            <p>统一评分同日候选，优先查看高分与多维度一致的标的。</p>
+        </div>
+        <nav class="core-stepper" aria-label="核心决策路径">
+            <button class="core-step is-complete" data-core-page="selection"><span>01</span><strong>选股</strong><small>发现候选</small></button>
+            <i></i>
+            <button class="core-step is-active" data-core-page="stock-ranking"><span>02</span><strong>排名</strong><small>量化优先级</small></button>
+            <i></i>
+            <button class="core-step" data-core-page="khunter"><span>03</span><strong>狩猎场</strong><small>确认时机</small></button>
+        </nav>
+    </section>
+
+    <section class="core-workspace">
+        <div class="ranking-toolbar">
+            <div>
+                <span class="section-kicker">评分基准日</span>
+                <label class="ranking-date-control">
+                    <input type="date" id="stock-ranking-date" class="form-control">
+                </label>
+            </div>
+            <div class="ranking-actions">
+                <button class="btn core-primary-action" id="generate-ranking-btn">
+                    <span id="generate-btn-text">生成今日排名</span>
+                    <span id="generate-loading" class="loading-spinner" style="display:none;">⏳</span>
+                </button>
+                <button class="btn btn-secondary" id="force-regenerate-ranking-btn" title="重新计算全部候选评分">
+                    <span id="force-regenerate-btn-text">重算评分</span>
+                    <span id="force-regenerate-loading" class="loading-spinner" style="display:none;">⏳</span>
+                </button>
+            </div>
+        </div>
+        <div id="stock-ranking-result" class="core-results">
+            <div class="core-empty-state compact">
+                <span class="empty-mark">≋</span>
+                <h3>等待生成排名</h3>
+                <p>评分完成后，点击分数可查看每个维度的贡献与风险项。</p>
+            </div>
+        </div>
+    </section>
+</div>

@@ -116,7 +116,7 @@ const PAGE_LIFECYCLES = {
         async enter() {
             const ranking = await import('./ranking.js');
             ranking.setupRankingEvents();
-            ranking.initStockRankingPage();
+            await ranking.initStockRankingPage();
         }
     },
     'ranking-track': {

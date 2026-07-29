@@ -65,6 +65,7 @@ async function loadModules() {
         const moneyFlowModule = await import('./modules/money_flow.js');
         const strategyRunnerModule = await import('./modules/strategy-runner.js');
         const riskModule = await import('./modules/risk.js');
+        const coreFlowModule = await import('./modules/core-flow.js');
         
         // 存储模块
         modules = {
@@ -83,7 +84,8 @@ async function loadModules() {
             marketTemp: marketTempModule,
             moneyFlow: moneyFlowModule,
             strategyRunner: strategyRunnerModule,
-            risk: riskModule
+            risk: riskModule,
+            coreFlow: coreFlowModule
         };
         
         // 初始化
@@ -104,6 +106,7 @@ async function initializeApp() {
     
     // 初始化导航
     modules.navigation.setupNavigation();
+    modules.coreFlow.setupCoreFlow();
 
     // 立即启动首屏生命周期，避免被其他一次性初始化任务阻塞
     const initialPageTransition = modules.navigation.switchPage(currentPage);
@@ -139,6 +142,7 @@ async function initializeApp() {
     window.resetHistoryFilters = modules.history.resetHistoryFilters;
     window.generateRanking = modules.ranking.generateRanking;
     window.trackRanking = modules.ranking.trackRanking;
+    window.continueToKHunter = modules.ranking.continueToKHunter;
     window.showScoreDetail = modules.analysis.showScoreDetail;
     window.closeScoreDetailModal = modules.analysis.closeScoreDetailModal;
     window.showIndustryStocks = modules.stocks.showIndustryStocks;
@@ -156,6 +160,16 @@ async function initializeApp() {
     const runSelectionBtn = document.getElementById('run-selection-btn');
     if (runSelectionBtn) {
         runSelectionBtn.addEventListener('click', modules.selection.runSelection);
+    }
+
+    const selectionStartBtn = document.getElementById('selection-start-btn');
+    if (selectionStartBtn) {
+        selectionStartBtn.addEventListener('click', modules.selection.runSelection);
+    }
+
+    const continueToRankingBtn = document.getElementById('continue-to-ranking-btn');
+    if (continueToRankingBtn) {
+        continueToRankingBtn.addEventListener('click', modules.selection.continueToRanking);
     }
     
     const saveSelectionBtn = document.getElementById('save-selection-btn');

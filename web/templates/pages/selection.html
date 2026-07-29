@@ -1,19 +1,50 @@
-<div id="selection-page" class="page">
-                    <div class="card">
-                        <div class="card-header">
-                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                                <span id="selection-date-display" class="text-primary" style="font-weight:600;"></span>
-                                <span id="selection-time" class="text-muted"></span>
-                                <button class="btn btn-success" id="export-selection-btn" onclick="exportSelectionResults()" style="display:none;">
-                                    <span class="icon">📥</span> 导出结果
-                                </button>
-                                <button class="btn btn-primary" id="save-selection-btn" style="display:none;">
-                                    <span class="icon">💾</span> 保存结果
-                                </button>
-                            </div>
-                        </div>
-                        <div id="selection-results">
-                            <p class="placeholder">点击"执行选股"按钮开始选股</p>
-                        </div>
-                    </div>
-                </div>
+<div id="selection-page" class="page core-flow-page" data-core-step="selection">
+    <section class="core-flow-hero">
+        <div class="core-flow-heading">
+            <span class="eyebrow">TODAY'S HUNT · 第一步</span>
+            <h1>先找到值得研究的股票</h1>
+            <p>组合形态策略生成候选池。先扩大视野，下一步再用评分收窄范围。</p>
+        </div>
+        <button class="btn core-primary-action" id="selection-start-btn">
+            <span>运行选股策略</span><span aria-hidden="true">↗</span>
+        </button>
+        <nav class="core-stepper" aria-label="核心决策路径">
+            <button class="core-step is-active" data-core-page="selection"><span>01</span><strong>选股</strong><small>发现候选</small></button>
+            <i></i>
+            <button class="core-step" data-core-page="stock-ranking"><span>02</span><strong>排名</strong><small>量化优先级</small></button>
+            <i></i>
+            <button class="core-step" data-core-page="khunter"><span>03</span><strong>狩猎场</strong><small>确认时机</small></button>
+        </nav>
+    </section>
+
+    <section class="core-workspace">
+        <div class="core-section-head">
+            <div>
+                <span class="section-kicker">候选池</span>
+                <h2>策略命中结果</h2>
+            </div>
+            <div class="selection-meta">
+                <span id="selection-date-display">尚未运行</span>
+                <span id="selection-time" class="text-muted"></span>
+            </div>
+            <div class="core-quiet-actions">
+                <button class="btn btn-secondary" id="export-selection-btn" onclick="exportSelectionResults()" style="display:none;">导出</button>
+                <button class="btn btn-secondary" id="save-selection-btn" style="display:none;">保存</button>
+            </div>
+        </div>
+        <div id="selection-results" class="core-results">
+            <div class="core-empty-state">
+                <span class="empty-mark">⌁</span>
+                <h3>候选池等待生成</h3>
+                <p>选择日期与形态策略，系统会把多策略共振标记在最前面。</p>
+                <button class="text-action" onclick="document.getElementById('selection-start-btn').click()">配置并运行 →</button>
+            </div>
+        </div>
+    </section>
+
+    <aside id="selection-next-step" class="core-next-step" hidden>
+        <div><span class="next-number" id="selection-result-count">—</span><small>只候选股票已就绪</small></div>
+        <p><strong>下一步：让评分替你排优先级</strong><span>保存本次结果，并按技术、基本面、资金与事件维度综合排名。</span></p>
+        <button class="btn core-next-button" id="continue-to-ranking-btn">保存并进入排名 <span>→</span></button>
+    </aside>
+</div>

@@ -7,12 +7,19 @@ let rankingEventsBound = false;
 /**
  * 初始化选股排名页面
  */
-export function initStockRankingPage() {
+export async function initStockRankingPage() {
     console.log('初始化选股排名页面');
-    // 加载可用日期
-    loadRankingDates('stock-ranking-date');
-    // 重置结果区域
-    document.getElementById('stock-ranking-result').innerHTML = '';
+    await loadRankingDates('stock-ranking-date');
+    const resultContainer = document.getElementById('stock-ranking-result');
+    if (!resultContainer.querySelector('.table-responsive')) {
+        resultContainer.innerHTML = `
+            <div class="core-empty-state compact">
+                <span class="empty-mark">≋</span>
+                <h3>等待生成排名</h3>
+                <p>评分完成后，点击分数可查看每个维度的贡献与风险项。</p>
+            </div>
+        `;
+    }
 }
 
 /**
@@ -31,6 +38,22 @@ export function initRankingTrackPage() {
  * @param {string} dateInputId - 日期输入框ID
  */
 export async function loadRankingDates(dateInputId) {
+    const dateInput = document.getElementById(dateInputId);
+    const flowDate = window.CoreFlow?.getDate();
+    if (dateInput && dateInputId === 'stock-ranking-date' && flowDate) {
+        dateInput.value = flowDate;
+        return;
+    }
+    if (dateInput && dateInputId === 'stock-ranking-date') {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        dateInput.value = [
+            yesterday.getFullYear(),
+            String(yesterday.getMonth() + 1).padStart(2, '0'),
+            String(yesterday.getDate()).padStart(2, '0')
+        ].join('-');
+    }
+
     try {
         const response = await window.apiFetch('/api/ranking/dates');
         const result = await response.json();
@@ -39,7 +62,6 @@ export async function loadRankingDates(dateInputId) {
             const dates = result.data;
             if (dates.length > 0) {
                 // 设置默认日期为最新的日期
-                const dateInput = document.getElementById(dateInputId);
                 if (dateInput) {
                     dateInput.value = dates[0];
                 }
@@ -137,7 +159,14 @@ export function renderRankingResult(data, container, selectionDate) {
         return;
     }
     
+    const topScore = Number(data[0]?.score || 0);
+    const strongCount = data.filter(item => Number(item.score || 0) >= 70).length;
     let html = `
+        <div class="ranking-summary">
+            <div><span>${data.length}</span><small>候选总数</small></div>
+            <div><span>${topScore.toFixed(1)}</span><small>最高综合分</small></div>
+            <div><span>${strongCount}</span><small>70 分以上</small></div>
+        </div>
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -161,7 +190,7 @@ export function renderRankingResult(data, container, selectionDate) {
         
         html += `
             <tr>
-                <td>${index + 1}</td>
+                <td><span class="rank-medal">${index + 1}</span></td>
                 <td><a href="javascript:void(0)" onclick="viewStockDetail('${item.stock_code}')" class="stock-link">${item.stock_code}</a></td>
                 <td>${item.stock_name}</td>
                 <td><a href="javascript:void(0)" onclick="showScoreDetail('${item.stock_code}', '${selectionDate}')" class="score-link">${score.toFixed(2)}</a></td>
@@ -176,9 +205,19 @@ export function renderRankingResult(data, container, selectionDate) {
                 </tbody>
             </table>
         </div>
+        <aside class="core-next-step ranking-next">
+            <div><span class="next-number">${Math.min(data.length, 10)}</span><small>只头部标的待确认</small></div>
+            <p><strong>下一步：检查真实买入窗口</strong><span>排名回答“先看谁”，狩猎场将用择时策略回答“何时动手”。</span></p>
+            <button class="btn core-next-button" onclick="continueToKHunter('${selectionDate}')">带着排名进入狩猎场 <span>→</span></button>
+        </aside>
     `;
     
     container.innerHTML = html;
+}
+
+export async function continueToKHunter(selectionDate) {
+    window.CoreFlow?.setDate(selectionDate);
+    await window.CoreFlow?.go('khunter', selectionDate);
 }
 
 /**
