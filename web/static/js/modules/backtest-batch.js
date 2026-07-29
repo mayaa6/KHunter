@@ -746,7 +746,7 @@ class BacktestUIManager {
    * @param {string} message - 错误信息
    */
   showError(message) {
-    alert(`错误: ${message}`);
+    window.AppToast.notify(`错误: ${message}`);
     console.error(message);
   }
 
@@ -953,7 +953,7 @@ async function initBacktestBatchModule() {
  */
 async function loadStrategies() {
   try {
-    const response = await fetch('/api/trading/backtest/strategies');
+    const response = await window.apiFetch('/api/trading/backtest/strategies');
     if (!response.ok) {
       throw new Error('加载策略列表失败');
     }
@@ -977,7 +977,7 @@ async function loadStrategies() {
     }
   } catch (error) {
     console.error('加载策略列表失败:', error);
-    alert('加载策略列表失败，请刷新页面重试');
+    window.AppToast.notify('加载策略列表失败，请刷新页面重试');
   }
 }
 
@@ -1094,7 +1094,7 @@ async function executeBacktestBatch() {
 
     // 从后端API加载配置
     try {
-      const response = await fetch('/api/trading/backtest/configs');
+      const response = await window.apiFetch('/api/trading/backtest/configs');
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data.configs && data.data.configs.length > 0) {
@@ -1124,7 +1124,7 @@ async function executeBacktestBatch() {
     }));
 
     // 1. 提交批量任务到后端
-    const submitResponse = await fetch('/api/trading/backtest/batch/submit', {
+    const submitResponse = await window.apiFetch('/api/trading/backtest/batch/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1155,7 +1155,7 @@ async function executeBacktestBatch() {
     console.log(`批量任务已提交: ${batchId}, 任务数: ${submitData.data.total_tasks}`);
 
     // 2. 开始执行
-    const startResponse = await fetch('/api/trading/backtest/batch/start', {
+    const startResponse = await window.apiFetch('/api/trading/backtest/batch/start', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1178,7 +1178,7 @@ async function executeBacktestBatch() {
     await pollBatchStatus(batchId, tasks.length);
 
     // 4. 获取最终结果
-    const resultsResponse = await fetch(`/api/trading/backtest/batch/results?batch_id=${batchId}`);
+    const resultsResponse = await window.apiFetch(`/api/trading/backtest/batch/results?batch_id=${batchId}`);
     if (resultsResponse.ok) {
       const resultsData = await resultsResponse.json();
       if (resultsData.success && resultsData.data.results) {
@@ -1225,7 +1225,7 @@ async function pollBatchStatus(batchId, totalTasks) {
   return new Promise((resolve, reject) => {
     const poll = async () => {
       try {
-        const response = await fetch(`/api/trading/backtest/batch/status?batch_id=${batchId}`);
+        const response = await window.apiFetch(`/api/trading/backtest/batch/status?batch_id=${batchId}`);
         if (!response.ok) {
           throw new Error('查询状态失败');
         }

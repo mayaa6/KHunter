@@ -1964,8 +1964,9 @@
         </div>
     </div>
 
+    <script src="/static/js/core.js?v=1"></script>
     <script src="/static/js/dashboard_stats.js"></script>
-    <script type="module" src="/static/js/app.js?v=14"></script>
+    <script type="module" src="/static/js/app.js?v=15"></script>
     <script src="/static/js/kline_chart.js"></script>
     <script src="/static/js/init_simple.js?v=2"></script>
     <script src="/static/js/trading.js"></script>
@@ -2090,10 +2091,10 @@
     </div>
     
     <!-- 加载指示器 -->
-    <div id="global-loading" class="loading-overlay" style="display: none;">
+    <div id="global-loading" class="loading-overlay" style="display: none;" role="status" aria-live="polite" aria-hidden="true">
         <div class="loading-content">
             <span class="spinner"></span>
-            <span>处理中...</span>
+            <span data-loading-message>处理中...</span>
         </div>
     </div>
 

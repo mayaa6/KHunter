@@ -30,7 +30,7 @@ export function initRankingTrackPage() {
  */
 export async function loadRankingDates(dateInputId) {
     try {
-        const response = await fetch('/api/ranking/dates');
+        const response = await window.apiFetch('/api/ranking/dates');
         const result = await response.json();
         
         if (result.success && result.data) {
@@ -59,7 +59,7 @@ export async function generateRanking() {
     
     const selectionDate = dateInput.value;
     if (!selectionDate) {
-        alert('请选择选股日期');
+        window.AppToast.notify('请选择选股日期');
         return;
     }
     
@@ -67,7 +67,7 @@ export async function generateRanking() {
     resultContainer.innerHTML = '<p class="loading">正在生成排名，请稍候...</p>';
     
     try {
-        const response = await fetch('/api/ranking/generate', {
+        const response = await window.apiFetch('/api/ranking/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ export async function trackRanking() {
     const topN = parseInt(topNSelect.value);
     
     if (!selectionDate) {
-        alert('请选择选股日期');
+        window.AppToast.notify('请选择选股日期');
         return;
     }
     
@@ -110,7 +110,7 @@ export async function trackRanking() {
     resultContainer.innerHTML = '<p class="loading">正在跟踪排名，请稍候...</p>';
     
     try {
-        const response = await fetch(`/api/ranking/track?selection_date=${selectionDate}&top_n=${topN}`);
+        const response = await window.apiFetch(`/api/ranking/track?selection_date=${selectionDate}&top_n=${topN}`);
         const result = await response.json();
         
         if (result.success) {
@@ -294,7 +294,7 @@ export async function regenerateRanking() {
     
     const selectionDate = dateInput.value;
     if (!selectionDate) {
-        alert('请选择选股日期');
+        window.AppToast.notify('请选择选股日期');
         return;
     }
     
@@ -307,7 +307,7 @@ export async function regenerateRanking() {
     resultContainer.innerHTML = '<p class="loading">正在重新生成排名，请稍候...</p>';
     
     try {
-        const response = await fetch('/api/ranking/regenerate', {
+        const response = await window.apiFetch('/api/ranking/regenerate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -371,7 +371,7 @@ export async function forceRegenerateRanking() {
     
     const selectionDate = dateInput.value;
     if (!selectionDate) {
-        alert('请选择选股日期');
+        window.AppToast.notify('请选择选股日期');
         return;
     }
     
@@ -384,7 +384,7 @@ export async function forceRegenerateRanking() {
     resultContainer.innerHTML = '<p class="loading">正在强制重新生成排名，请稍候...</p>';
     
     try {
-        const response = await fetch('/api/ranking/regenerate', {
+        const response = await window.apiFetch('/api/ranking/regenerate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

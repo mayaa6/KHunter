@@ -183,9 +183,12 @@ class BacktestAPI {
     });
     
     try {
+      const fetchRequest = typeof window !== 'undefined' && window.apiFetch
+        ? window.apiFetch
+        : globalThis.fetch.bind(globalThis);
       // 发送请求（带超时）
       const response = await Promise.race([
-        fetch(url, fetchOptions),
+        fetchRequest(url, fetchOptions),
         timeoutPromise
       ]);
       

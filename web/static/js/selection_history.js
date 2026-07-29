@@ -36,7 +36,7 @@ function loadStrategyOptions() {
     console.log('开始加载策略列表...');
     
     // 从API获取策略列表
-    fetch('/api/strategies')
+    window.apiFetch('/api/strategies')
         .then(response => response.json())
         .then(data => {
             console.log('API返回数据:', data);
@@ -122,7 +122,7 @@ function fetchSelectionHistory(strategyName, startDate, endDate, stockCode, page
     params.append('limit', pageLimit);
     
     // 发送请求
-    fetch(`/api/selection-history?${params.toString()}`)
+    window.apiFetch(`/api/selection-history?${params.toString()}`)
         .then(response => response.json())
         .then(data => {
             showLoading(false);

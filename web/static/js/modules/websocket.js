@@ -100,7 +100,7 @@ export function updateProgressUI(status) {
                 }
             }
             
-            alert(message);
+            window.AppToast.notify(message);
             progressCard.style.display = 'none';
             // 刷新统计信息
             import('./stocks.js').then(module => module.loadStats());
@@ -127,7 +127,7 @@ export async function checkUpdateStatusBackup(progressCard) {
     
     updateStatusInterval = setInterval(async () => {
         try {
-            const response = await fetch('/api/update/status');
+            const response = await window.apiFetch('/api/update/status');
             const result = await response.json();
             
             if (result.success) {
@@ -149,7 +149,7 @@ export async function checkUpdateStatusBackup(progressCard) {
                     
                     // 显示完成信息
                     setTimeout(() => {
-                        alert(`Data update completed!\nSuccess: ${status.success}\nFailed: ${status.failed}`);
+                        window.AppToast.notify(`Data update completed!\nSuccess: ${status.success}\nFailed: ${status.failed}`);
                         progressCard.style.display = 'none';
                         // 刷新统计信息
                         import('./stocks.js').then(module => module.loadStats());

@@ -50,7 +50,7 @@ export async function runMoneyFlowSelection() {
     console.log('资金流向选股参数:', { endDate, days, minNetAmount });
     
     try {
-        const response = await fetch('/api/money-flow/select', {
+        const response = await window.apiFetch('/api/money-flow/select', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

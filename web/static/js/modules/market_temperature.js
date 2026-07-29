@@ -25,7 +25,7 @@ export async function initMarketTemperature() {
 export async function loadCurrentTemperature() {
     try {
         // 1. 首先尝试获取数据库中最新保存的温度数据
-        let response = await fetch('/api/market-temperature/latest');
+        let response = await window.apiFetch('/api/market-temperature/latest');
         let result = await response.json();
         
         if (result.success && result.data) {
@@ -36,7 +36,7 @@ export async function loadCurrentTemperature() {
         }
         
         // 2. 如果没有最新数据，尝试计算当前日期的温度
-        response = await fetch('/api/market-temperature/calculate', {
+        response = await window.apiFetch('/api/market-temperature/calculate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ use_cache: true })
@@ -135,7 +135,7 @@ export async function showTemperatureDetail() {
     }
     
     if (!marketTempCache) {
-        alert('加载温度数据失败');
+        window.AppToast.notify('加载温度数据失败');
         return;
     }
     
@@ -253,11 +253,11 @@ export async function showTemperatureTrend() {
     closeModal();
     
     try {
-        const response = await fetch('/api/market-temperature/trend?days=10');
+        const response = await window.apiFetch('/api/market-temperature/trend?days=10');
         const result = await response.json();
         
         if (!result.success || !result.data.trend) {
-            alert('加载趋势数据失败');
+            window.AppToast.notify('加载趋势数据失败');
             return;
         }
         
@@ -324,7 +324,7 @@ export async function showTemperatureTrend() {
         
     } catch (error) {
         console.error('加载趋势数据失败:', error);
-        alert('加载趋势数据失败');
+        window.AppToast.notify('加载趋势数据失败');
     }
 }
 
@@ -543,7 +543,7 @@ export async function recalculateTemperature() {
         btn.disabled = true;
         
         // 发送请求重新计算温度（不使用缓存）
-        const response = await fetch('/api/market-temperature/calculate', {
+        const response = await window.apiFetch('/api/market-temperature/calculate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -566,10 +566,10 @@ export async function recalculateTemperature() {
             setTimeout(showTemperatureDetail, 100);
             
             // 显示成功提示
-            alert(`温度计算成功！\n日期: ${tradeDate}\n温度: ${result.data.temperature.toFixed(1)}°\n状态: ${result.data.status}`);
+            window.AppToast.notify(`温度计算成功！\n日期: ${tradeDate}\n温度: ${result.data.temperature.toFixed(1)}°\n状态: ${result.data.status}`);
         } else {
             // 显示失败原因
-            alert(`温度计算失败：${result.message || '未知错误'}`);
+            window.AppToast.notify(`温度计算失败：${result.message || '未知错误'}`);
         }
         
         // 恢复按钮状态
@@ -578,7 +578,7 @@ export async function recalculateTemperature() {
         
     } catch (error) {
         console.error('重新计算温度失败:', error);
-        alert('重新计算温度失败：' + error.message);
+        window.AppToast.notify('重新计算温度失败：' + error.message);
         
         // 恢复按钮状态
         const btn = document.getElementById('recalculate-temp-btn');

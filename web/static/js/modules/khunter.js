@@ -12,7 +12,7 @@ let currentResults = [];
  */
 async function fetchLatestKlineDate() {
     try {
-        const response = await fetch('/api/khunter/latest_kline_date');
+        const response = await window.apiFetch('/api/khunter/latest_kline_date');
         const result = await response.json();
         
         if (result.success && result.data && result.data.latest_date) {
@@ -39,7 +39,7 @@ async function fetchLatestKlineDate() {
  */
 async function loadTimingStrategies() {
     try {
-        const response = await fetch('/api/timing-strategies');
+        const response = await window.apiFetch('/api/timing-strategies');
         const result = await response.json();
         
         if (result.success && result.strategies) {
@@ -150,7 +150,7 @@ function calculate() {
     disableControls(true);
     
     // 4. 调用 API
-    fetch('/api/khunter/calculate', {
+    window.apiFetch('/api/khunter/calculate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -212,7 +212,7 @@ function generateTradingPlan() {
     showGlobalLoading();
     
     // 4. 调用 API
-    fetch('/api/khunter/generate_plan', {
+    window.apiFetch('/api/khunter/generate_plan', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -393,7 +393,7 @@ function exportTradingPlan() {
     showGlobalLoading();
     
     // 4. 调用导出 API
-    fetch('/api/khunter/export_plan', {
+    window.apiFetch('/api/khunter/export_plan', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -551,7 +551,7 @@ function saveResults() {
     disableControls(true);
     
     // 3. 调用保存 API
-    fetch('/api/khunter/save', {
+    window.apiFetch('/api/khunter/save', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -779,7 +779,7 @@ export async function trackKHunter() {
     // 2. 获取选择的日期
     const huntingDate = dateInput.value;
     if (!huntingDate) {
-        alert('请选择狩猎日期');
+        window.AppToast.notify('请选择狩猎日期');
         return;
     }
     
@@ -788,7 +788,7 @@ export async function trackKHunter() {
     
     try {
         // 4. 调用API获取跟踪数据
-        const response = await fetch(`/api/khunter/track?hunting_date=${huntingDate}`);
+        const response = await window.apiFetch(`/api/khunter/track?hunting_date=${huntingDate}`);
         const result = await response.json();
         
         // 5. 处理响应

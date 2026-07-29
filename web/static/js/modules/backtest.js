@@ -99,7 +99,7 @@ export async function initBacktestConfigPage() {
 async function loadTimingStrategies() {
     try {
         console.log('开始加载择时策略列表');
-        const response = await fetch('/api/timing-strategies');
+        const response = await window.apiFetch('/api/timing-strategies');
         if (!response.ok) {
             throw new Error('加载择时策略列表失败: ' + response.status);
         }
@@ -187,7 +187,7 @@ async function loadHistoryStrategies() {
         strategySelect.appendChild(defaultOption);
         
         // 调用策略API加载策略列表
-        const response = await fetch('/api/trading/backtest/strategies');
+        const response = await window.apiFetch('/api/trading/backtest/strategies');
         console.log('API 响应状态:', response.status);
         
         if (!response.ok) {
@@ -239,7 +239,7 @@ async function loadHistoryStrategies() {
  */
 async function loadStrategies() {
     try {
-        const response = await fetch('/api/trading/backtest/strategies');
+        const response = await window.apiFetch('/api/trading/backtest/strategies');
         if (!response.ok) {
             throw new Error('加载策略列表失败');
         }
@@ -263,7 +263,7 @@ async function loadStrategies() {
         }
     } catch (error) {
         console.error('加载策略列表失败:', error);
-        alert('加载策略列表失败，请刷新页面重试');
+        window.AppToast.notify('加载策略列表失败，请刷新页面重试');
     }
 }
 
@@ -315,7 +315,7 @@ async function saveBacktestParams() {
         };
         
         // 调用后端API保存配置
-        const response = await fetch('/api/trading/backtest/configs', {
+        const response = await window.apiFetch('/api/trading/backtest/configs', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -329,13 +329,13 @@ async function saveBacktestParams() {
         
         const data = await response.json();
         if (data.success) {
-            alert('回测配置保存成功');
+            window.AppToast.notify('回测配置保存成功');
         } else {
             throw new Error(data.message || '保存回测配置失败');
         }
     } catch (error) {
         console.error('保存回测配置失败:', error);
-        alert('保存回测配置失败: ' + error.message);
+        window.AppToast.notify('保存回测配置失败: ' + error.message);
     }
 }
 
@@ -345,7 +345,7 @@ async function saveBacktestParams() {
 async function loadBacktestParams() {
     try {
         // 从后端API加载配置
-        const response = await fetch('/api/trading/backtest/configs');
+        const response = await window.apiFetch('/api/trading/backtest/configs');
         if (!response.ok) {
             throw new Error('加载回测配置失败');
         }
@@ -414,7 +414,7 @@ async function runBacktest() {
         
         // 验证表单数据
         if (!strategySelect?.value || !startDateInput?.value || !endDateInput?.value) {
-            alert('请填写完整的回测执行条件');
+            window.AppToast.notify('请填写完整的回测执行条件');
             return;
         }
         
@@ -433,7 +433,7 @@ async function runBacktest() {
         
         // 从后端API加载配置
         try {
-            const response = await fetch('/api/trading/backtest/configs');
+            const response = await window.apiFetch('/api/trading/backtest/configs');
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.data.configs && data.data.configs.length > 0) {
@@ -498,7 +498,7 @@ async function runBacktest() {
         }
         
         // 运行回测
-        const response = await fetch('/api/trading/backtest/run', {
+        const response = await window.apiFetch('/api/trading/backtest/run', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -531,7 +531,7 @@ async function runBacktest() {
         }
     } catch (error) {
         console.error('运行回测失败:', error);
-        alert('运行回测失败: ' + error.message);
+        window.AppToast.notify('运行回测失败: ' + error.message);
     } finally {
         // 恢复按钮状态
         const runBacktestBtn = document.getElementById('run-backtest-btn');
@@ -548,7 +548,7 @@ async function runBacktest() {
  */
 async function loadBacktestResult(resultId) {
     try {
-        const response = await fetch(`/api/trading/backtest/results/${resultId}`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}`);
         if (!response.ok) {
             throw new Error('加载回测结果失败');
         }
@@ -683,7 +683,7 @@ function displayBacktestResult(result) {
  */
 async function loadBacktestTrades(resultId) {
     try {
-        const response = await fetch(`/api/trading/backtest/results/${resultId}/trades`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}/trades`);
         if (!response.ok) {
             throw new Error('加载交易记录失败');
         }
@@ -697,7 +697,7 @@ async function loadBacktestTrades(resultId) {
         }
     } catch (error) {
         console.error('加载交易记录失败:', error);
-        alert('加载交易记录失败: ' + error.message);
+        window.AppToast.notify('加载交易记录失败: ' + error.message);
     }
 }
 
@@ -771,7 +771,7 @@ function displayBacktestTrades(trades) {
 async function loadBacktestHistory() {
     try {
         console.log('开始加载回测历史...');
-        const response = await fetch('/api/trading/backtest/results');
+        const response = await window.apiFetch('/api/trading/backtest/results');
         console.log('API 响应状态:', response.status);
         
         if (!response.ok) {
@@ -862,7 +862,7 @@ export async function deleteBacktestResult(resultId) {
             return;
         }
 
-        const response = await fetch(`/api/trading/backtest/results/${resultId}`, {
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -892,7 +892,7 @@ export async function exportBacktestResult(resultId) {
         // 显示加载提示
         showAlert('正在导出回测报告...', 'info');
         
-        const response = await fetch(`/api/trading/backtest/results/${resultId}/export`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}/export`);
         
         if (response.ok) {
             // 获取文件名
@@ -958,7 +958,7 @@ export function closeBacktestModal() {
  */
 async function loadBacktestResultInModal(resultId) {
     try {
-        const response = await fetch(`/api/trading/backtest/results/${resultId}`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}`);
         if (!response.ok) {
             throw new Error('加载回测结果失败');
         }
@@ -982,7 +982,7 @@ async function loadBacktestResultInModal(resultId) {
         }
     } catch (error) {
         console.error('加载回测结果失败:', error);
-        alert('加载回测结果失败: ' + error.message);
+        window.AppToast.notify('加载回测结果失败: ' + error.message);
         closeBacktestModal();
     }
 }
@@ -1109,7 +1109,7 @@ function displayBacktestResultInModal(result) {
  */
 async function loadBacktestTradesInModal(resultId) {
     try {
-        const response = await fetch(`/api/trading/backtest/results/${resultId}/trades`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}/trades`);
         if (!response.ok) {
             throw new Error('加载交易记录失败');
         }
@@ -1123,7 +1123,7 @@ async function loadBacktestTradesInModal(resultId) {
         }
     } catch (error) {
         console.error('加载交易记录失败:', error);
-        alert('加载交易记录失败: ' + error.message);
+        window.AppToast.notify('加载交易记录失败: ' + error.message);
     }
 }
 
@@ -1243,7 +1243,7 @@ export async function searchBacktestHistory() {
         const queryString = params.toString();
         const url = `/api/trading/backtest/results${queryString ? `?${queryString}` : ''}`;
         
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         if (!response.ok) {
             throw new Error('搜索回测历史失败');
         }
@@ -1515,7 +1515,7 @@ function drawEquityChartInModal(capitalHistory, dates) {
  */
 async function loadBacktestTradesOnConfigPage(resultId) {
     try {
-        const response = await fetch(`/api/trading/backtest/results/${resultId}/trades`);
+        const response = await window.apiFetch(`/api/trading/backtest/results/${resultId}/trades`);
         if (!response.ok) {
             throw new Error('加载交易记录失败');
         }
@@ -1529,7 +1529,7 @@ async function loadBacktestTradesOnConfigPage(resultId) {
         }
     } catch (error) {
         console.error('加载交易记录失败:', error);
-        alert('加载交易记录失败: ' + error.message);
+        window.AppToast.notify('加载交易记录失败: ' + error.message);
     }
 }
 
@@ -1610,9 +1610,9 @@ function showAlert(message, type = 'info') {
     
     // 否则使用原生alert作为后备（简化版）
     if (type === 'error') {
-        alert('错误: ' + message);
+        window.AppToast.notify('错误: ' + message);
     } else if (type === 'success') {
-        alert('成功: ' + message);
+        window.AppToast.notify('成功: ' + message);
     } else {
         console.log(message);
     }

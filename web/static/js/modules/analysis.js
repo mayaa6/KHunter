@@ -126,7 +126,7 @@ export async function queryStockScore() {
         }
 
         console.log('请求评分API:', url);
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         const result = await response.json();
         console.log('评分API返回:', result);
 
@@ -366,7 +366,7 @@ export async function queryScoreHistory() {
     // 获取当前查询的股票代码
     const stockCode = document.getElementById('score-stock-code').value.trim();
     if (!stockCode) {
-        alert('请先输入股票代码');
+        window.AppToast.notify('请先输入股票代码');
         return;
     }
 
@@ -387,7 +387,7 @@ export async function queryScoreHistory() {
         if (endDate) params.push(`end_date=${endDate.replace(/-/g, '')}`);
         if (params.length > 0) url += '?' + params.join('&');
 
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         const result = await response.json();
 
         hideElement('score-history-loading');
@@ -544,7 +544,7 @@ export async function loadStockScoreData(code, date) {
         }
         
         console.log('请求评分API:', url);
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         const result = await response.json();
         console.log('评分API返回:', result);
 

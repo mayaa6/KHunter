@@ -110,7 +110,7 @@ class BacktestExecutor {
       // 显示完成信息
       const message = `执行完成！成功: ${this.completedTasks}, 失败: ${this.failedTasks}`;
       console.log(message);
-      alert(message);
+      window.AppToast.notify(message);
 
     } catch (error) {
       console.error('执行过程中出错:', error);
@@ -193,7 +193,7 @@ class BacktestExecutor {
       console.log('调用后端API:', requestData);
 
       // 发送请求
-      const response = await fetch('/api/trading/backtest/run', {
+      const response = await window.apiFetch('/api/trading/backtest/run', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -248,7 +248,7 @@ class BacktestExecutor {
         async () => {
           // 发送请求
           // 注意：回测任务可能需要 2-3 小时，不设置超时限制
-          const response = await fetch('/api/trading/backtest/run', {
+          const response = await window.apiFetch('/api/trading/backtest/run', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

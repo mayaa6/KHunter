@@ -381,7 +381,10 @@ class RequestOptimizer {
 
     // 发送新请求
     console.log(`[新请求] ${url}`);
-    const promise = fetch(url, options)
+    const fetchRequest = typeof window !== 'undefined' && window.apiFetch
+      ? window.apiFetch
+      : globalThis.fetch.bind(globalThis);
+    const promise = fetchRequest(url, options)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);

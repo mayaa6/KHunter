@@ -232,7 +232,11 @@ class BacktestErrorHandler {
     if (this.uiManager && this.uiManager.showError) {
       this.uiManager.showError(userMessage);
     } else {
-      alert(`错误: ${userMessage}`);
+      if (typeof window !== 'undefined' && window.AppToast) {
+        window.AppToast.error(userMessage);
+      } else {
+        console.error(`错误: ${userMessage}`);
+      }
     }
 
     // 输出到控制台

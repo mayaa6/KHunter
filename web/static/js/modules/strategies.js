@@ -12,7 +12,7 @@ let strategiesData = [];
 export async function loadStrategies() {
     try {
         // 获取策略列表
-        const response = await fetch('/api/strategies');
+        const response = await window.apiFetch('/api/strategies');
         const result = await response.json();
         
         if (result.success) {
@@ -62,7 +62,7 @@ export function renderStrategiesGrid(strategies) {
 export async function viewStrategyDetail(strategyName) {
     try {
         // 获取策略详情
-        const response = await fetch(`/api/strategies/${strategyName}`);
+        const response = await window.apiFetch(`/api/strategies/${strategyName}`);
         const result = await response.json();
         
         if (result.success) {
@@ -73,11 +73,11 @@ export async function viewStrategyDetail(strategyName) {
             document.getElementById('strategies-list-view').style.display = 'none';
             document.getElementById('strategies-detail-view').style.display = 'block';
         } else {
-            alert('加载策略详情失败: ' + result.error);
+            window.AppToast.notify('加载策略详情失败: ' + result.error);
         }
     } catch (error) {
         console.error('加载策略详情失败:', error);
-        alert('加载策略详情失败: ' + error.message);
+        window.AppToast.notify('加载策略详情失败: ' + error.message);
     }
 }
 
@@ -253,13 +253,13 @@ export async function saveStrategyParams() {
     });
     
     if (hasError) {
-        alert('参数验证失败，请检查错误信息');
+        window.AppToast.notify('参数验证失败，请检查错误信息');
         return;
     }
     
     try {
         // 第一步：后端验证参数
-        const validateResponse = await fetch(`/api/strategies/${currentStrategy.name}/validate`, {
+        const validateResponse = await window.apiFetch(`/api/strategies/${currentStrategy.name}/validate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -278,12 +278,12 @@ export async function saveStrategyParams() {
                     errorDiv.textContent = error;
                 }
             });
-            alert('参数验证失败，请检查错误信息');
+            window.AppToast.notify('参数验证失败，请检查错误信息');
             return;
         }
         
         // 第二步：保存参数到后端
-        const saveResponse = await fetch(`/api/strategies/${currentStrategy.name}/params`, {
+        const saveResponse = await window.apiFetch(`/api/strategies/${currentStrategy.name}/params`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -294,15 +294,15 @@ export async function saveStrategyParams() {
         const saveResult = await saveResponse.json();
         
         if (saveResult.success) {
-            alert('参数保存成功！');
+            window.AppToast.notify('参数保存成功！');
             // 更新当前策略的参数
             currentStrategy.current_params = params;
         } else {
-            alert('参数保存失败: ' + saveResult.error);
+            window.AppToast.notify('参数保存失败: ' + saveResult.error);
         }
     } catch (error) {
         console.error('保存参数失败:', error);
-        alert('保存参数失败: ' + error.message);
+        window.AppToast.notify('保存参数失败: ' + error.message);
     }
 }
 

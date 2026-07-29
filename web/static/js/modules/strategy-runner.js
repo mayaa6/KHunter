@@ -26,7 +26,7 @@ const StrategyRunnerModule = {
     // 加载策略名称映射
     loadStrategyNames: async function() {
         try {
-            const response = await fetch('/api/strategies/names');
+            const response = await window.apiFetch('/api/strategies/names');
             const result = await response.json();
             if (result.success) {
                 this.strategyNameMap = result.data;
@@ -164,7 +164,7 @@ const StrategyRunnerModule = {
     // 加载选股策略列表
     loadSelectionStrategies: async function() {
         try {
-            const response = await fetch('/api/strategies');
+            const response = await window.apiFetch('/api/strategies');
             const result = await response.json();
             
             if (result.success && result.strategies) {
@@ -183,7 +183,7 @@ const StrategyRunnerModule = {
     // 加载择时策略列表（从后端API动态获取）
     loadTimingStrategies: async function() {
         try {
-            const response = await fetch('/api/timing-strategies');
+            const response = await window.apiFetch('/api/timing-strategies');
             const result = await response.json();
             
             if (result.success && result.strategies) {
@@ -209,7 +209,7 @@ const StrategyRunnerModule = {
         
         // 如果没有提供策略名称且下拉框没有选中任何策略，显示错误
         if (!selectionStrategy) {
-            alert('请选择选股策略');
+            window.AppToast.notify('请选择选股策略');
             return;
         }
         
@@ -294,7 +294,7 @@ const StrategyRunnerModule = {
     // 检查策略运行器状态
     checkRunnerStatus: async function() {
         try {
-            const response = await fetch('/api/strategy/status');
+            const response = await window.apiFetch('/api/strategy/status');
             const result = await response.json();
             
             const initBtn = document.getElementById('init-runner-btn');
@@ -342,7 +342,7 @@ const StrategyRunnerModule = {
         }
         
         try {
-            const response = await fetch('/api/strategy/initialize', {
+            const response = await window.apiFetch('/api/strategy/initialize', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -381,7 +381,7 @@ const StrategyRunnerModule = {
     // 开始执行
     startExecution: async function() {
         if (this.tasks.length === 0) {
-            alert('请先添加执行任务');
+            window.AppToast.notify('请先添加执行任务');
             return;
         }
         
@@ -410,7 +410,7 @@ const StrategyRunnerModule = {
             document.getElementById('runner-current-task').textContent = `批量执行 ${this.tasks.length} 个任务...`;
             this.appendLog(`批量执行 ${this.tasks.length} 个策略任务`);
             
-            const response = await fetch('/api/strategy/run-batch', {
+            const response = await window.apiFetch('/api/strategy/run-batch', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -485,7 +485,7 @@ const StrategyRunnerModule = {
     // 加载运行状态
     loadStrategyStatus: async function() {
         try {
-            const response = await fetch('/api/strategy/status');
+            const response = await window.apiFetch('/api/strategy/status');
             const result = await response.json();
             
             if (result.success) {
@@ -512,7 +512,7 @@ const StrategyRunnerModule = {
     // 加载持仓信息
     loadPortfolio: async function() {
         try {
-            const response = await fetch('/api/portfolio');
+            const response = await window.apiFetch('/api/portfolio');
             const result = await response.json();
             
             if (result.success) {
@@ -582,7 +582,7 @@ const StrategyRunnerModule = {
         }
         
         try {
-            const response = await fetch('/api/portfolio/sell', {
+            const response = await window.apiFetch('/api/portfolio/sell', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -595,22 +595,22 @@ const StrategyRunnerModule = {
             const result = await response.json();
             
             if (result.success) {
-                alert(`卖出成功: ${stockName} (${stockCode})`);
+                window.AppToast.notify(`卖出成功: ${stockName} (${stockCode})`);
                 // 重新加载持仓
                 this.loadPortfolio();
             } else {
-                alert(`卖出失败: ${result.error || '未知错误'}`);
+                window.AppToast.notify(`卖出失败: ${result.error || '未知错误'}`);
             }
         } catch (error) {
             console.error('卖出失败:', error);
-            alert(`卖出失败: ${error.message}`);
+            window.AppToast.notify(`卖出失败: ${error.message}`);
         }
     },
     
     // 加载信号列表
     loadSignals: async function() {
         try {
-            const response = await fetch('/api/signals');
+            const response = await window.apiFetch('/api/signals');
             const result = await response.json();
             
             if (result.success) {
@@ -680,7 +680,7 @@ const StrategyRunnerModule = {
     // 加载股票池
     loadStockPool: async function() {
         try {
-            const response = await fetch('/api/stock-pool');
+            const response = await window.apiFetch('/api/stock-pool');
             const result = await response.json();
             
             if (result.success) {
@@ -733,7 +733,7 @@ const StrategyRunnerModule = {
     // 加载上次运行的任务
     loadLastTask: async function() {
         try {
-            const response = await fetch('/api/task/last');
+            const response = await window.apiFetch('/api/task/last');
             const result = await response.json();
             
             if (result.success && result.data) {
@@ -780,7 +780,7 @@ const StrategyRunnerModule = {
         }
         
         try {
-            const response = await fetch(`/api/signals/${signalId}/execute`, {
+            const response = await window.apiFetch(`/api/signals/${signalId}/execute`, {
                 method: 'POST'
             });
             
@@ -791,7 +791,7 @@ const StrategyRunnerModule = {
                 this.loadSignals();
                 this.loadPortfolio();
             } else {
-                alert('信号执行失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('信号执行失败: ' + (result.message || '未知错误'));
                 // 失败时恢复按钮状态
                 if (btn) {
                     btn.disabled = false;
@@ -800,7 +800,7 @@ const StrategyRunnerModule = {
             }
         } catch (error) {
             console.error('执行信号失败:', error);
-            alert('执行信号失败');
+            window.AppToast.notify('执行信号失败');
             // 异常时恢复按钮状态
             if (btn) {
                 btn.disabled = false;
@@ -819,7 +819,7 @@ const StrategyRunnerModule = {
         }
         
         try {
-            const response = await fetch(`/api/signals/${signalId}/ignore`, {
+            const response = await window.apiFetch(`/api/signals/${signalId}/ignore`, {
                 method: 'POST'
             });
             
@@ -829,7 +829,7 @@ const StrategyRunnerModule = {
                 this.appendLog('信号已忽略');
                 this.loadSignals();
             } else {
-                alert('忽略信号失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('忽略信号失败: ' + (result.message || '未知错误'));
                 // 失败时恢复按钮状态
                 if (btn) {
                     btn.disabled = false;
@@ -838,7 +838,7 @@ const StrategyRunnerModule = {
             }
         } catch (error) {
             console.error('忽略信号失败:', error);
-            alert('忽略信号失败');
+            window.AppToast.notify('忽略信号失败');
             // 异常时恢复按钮状态
             if (btn) {
                 btn.disabled = false;

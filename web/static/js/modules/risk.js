@@ -54,7 +54,7 @@ export class RiskModule {
                 params.append('force_refresh', 'true');
             }
             
-            const response = await fetch(`/api/risk/status?${params}`);
+            const response = await window.apiFetch(`/api/risk/status?${params}`);
             const result = await response.json();
             
             if (result.success) {
@@ -78,7 +78,7 @@ export class RiskModule {
      */
     async loadRiskHistory(days = 30) {
         try {
-            const response = await fetch(`/api/risk/history?days=${days}`);
+            const response = await window.apiFetch(`/api/risk/history?days=${days}`);
             const result = await response.json();
             
             if (result.success) {

@@ -24,7 +24,7 @@ async function initStats() {
  */
 async function loadRiskStatus() {
     try {
-        const response = await fetch('/api/risk/status');
+        const response = await window.apiFetch('/api/risk/status');
         const result = await response.json();
         
         if (result.success && result.data) {
@@ -49,7 +49,7 @@ async function loadRiskStatus() {
  */
 async function loadRiskHistory(days = 30) {
     try {
-        const response = await fetch(`/api/risk/history?days=${days}`);
+        const response = await window.apiFetch(`/api/risk/history?days=${days}`);
         const result = await response.json();
         
         if (result.success && result.data) {
@@ -194,7 +194,7 @@ function renderRiskTrendChart(data) {
  */
 async function loadMarketTemperature() {
     try {
-        const response = await fetch('/api/market-temperature/latest');
+        const response = await window.apiFetch('/api/market-temperature/latest');
         const result = await response.json();
         
         if (result.success && result.data) {
@@ -219,7 +219,7 @@ async function loadMarketTemperature() {
  */
 async function loadTemperatureHistory(days = 30) {
     try {
-        const response = await fetch(`/api/market-temperature/trend?days=${days}`);
+        const response = await window.apiFetch(`/api/market-temperature/trend?days=${days}`);
         const result = await response.json();
         
         if (result.success && result.data) {
@@ -576,7 +576,7 @@ async function recalculateTemperatureData() {
         }
         
         // 发送请求重新计算温度（不使用缓存）
-        const response = await fetch('/api/market-temperature/calculate', {
+        const response = await window.apiFetch('/api/market-temperature/calculate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -592,9 +592,9 @@ async function recalculateTemperatureData() {
             await loadMarketTemperature();
             
             // 显示成功提示
-            alert(`温度计算成功！\n日期: ${tradeDate}\n温度: ${result.data.temperature.toFixed(1)}°\n状态: ${result.data.status}\nAction: ${result.data.action}`);
+            window.AppToast.notify(`温度计算成功！\n日期: ${tradeDate}\n温度: ${result.data.temperature.toFixed(1)}°\n状态: ${result.data.status}\nAction: ${result.data.action}`);
         } else {
-            alert(`温度计算失败：${result.message || '未知错误'}`);
+            window.AppToast.notify(`温度计算失败：${result.message || '未知错误'}`);
         }
         
         // 恢复按钮状态
@@ -605,7 +605,7 @@ async function recalculateTemperatureData() {
         
     } catch (error) {
         console.error('重新计算温度失败:', error);
-        alert('重新计算温度失败：' + error.message);
+        window.AppToast.notify('重新计算温度失败：' + error.message);
         
         // 恢复按钮状态
         const btn = document.querySelector('.btn-warning');

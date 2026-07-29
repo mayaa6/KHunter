@@ -51,7 +51,7 @@ export function fetchSelectionHistory(strategyName, startDate, endDate, page) {
     const url = `/api/selection-history?${params.toString()}`;
     console.log('请求URL:', url);
     
-    fetch(url)
+    window.apiFetch(url)
         .then(response => {
             console.log('API响应状态:', response.status);
             return response.json();

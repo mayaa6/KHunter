@@ -75,7 +75,7 @@ const ExecutionPlanModule = {
     // 加载方案列表
     loadPlanList: async function() {
         try {
-            const response = await fetch('/api/execution/plans');
+            const response = await window.apiFetch('/api/execution/plans');
             const result = await response.json();
             
             if (result.success && result.data) {
@@ -121,7 +121,7 @@ const ExecutionPlanModule = {
     // 加载选股策略列表
     loadSelectionStrategies: async function() {
         try {
-            const response = await fetch('/api/strategies');
+            const response = await window.apiFetch('/api/strategies');
             const result = await response.json();
             
             if (result.success && result.strategies) {
@@ -156,7 +156,7 @@ const ExecutionPlanModule = {
     // 加载方案详情
     loadPlan: async function(planId) {
         try {
-            const response = await fetch(`/api/execution/plans/${planId}`);
+            const response = await window.apiFetch(`/api/execution/plans/${planId}`);
             const result = await response.json();
             
             if (result.success && result.data) {
@@ -175,11 +175,11 @@ const ExecutionPlanModule = {
                 
                 this.renderCombinations();
             } else {
-                alert('加载方案失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('加载方案失败: ' + (result.message || '未知错误'));
             }
         } catch (error) {
             console.error('加载方案失败:', error);
-            alert('加载方案失败');
+            window.AppToast.notify('加载方案失败');
         }
     },
     
@@ -342,7 +342,7 @@ const ExecutionPlanModule = {
         const enabled = document.getElementById('combo-enabled').checked;
         
         if (!selectionStrategy) {
-            alert('请选择选股策略');
+            window.AppToast.notify('请选择选股策略');
             return;
         }
         
@@ -382,12 +382,12 @@ const ExecutionPlanModule = {
         const description = document.getElementById('plan-desc-input').value.trim();
         
         if (!name) {
-            alert('请输入方案名称');
+            window.AppToast.notify('请输入方案名称');
             return;
         }
         
         if (this.combinations.length === 0) {
-            alert('请至少添加一个策略组合');
+            window.AppToast.notify('请至少添加一个策略组合');
             return;
         }
         
@@ -401,14 +401,14 @@ const ExecutionPlanModule = {
             let response;
             if (this.currentPlan) {
                 // 更新现有方案
-                response = await fetch(`/api/execution/plans/${this.currentPlan.id}`, {
+                response = await window.apiFetch(`/api/execution/plans/${this.currentPlan.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(planData)
                 });
             } else {
                 // 创建新方案
-                response = await fetch('/api/execution/plans', {
+                response = await window.apiFetch('/api/execution/plans', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(planData)
@@ -439,13 +439,13 @@ const ExecutionPlanModule = {
                     }
                 }, 100);
                 
-                alert('保存成功');
+                window.AppToast.notify('保存成功');
             } else {
-                alert('保存失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('保存失败: ' + (result.message || '未知错误'));
             }
         } catch (error) {
             console.error('保存方案失败:', error);
-            alert('保存方案失败');
+            window.AppToast.notify('保存方案失败');
         }
     },
     
@@ -454,7 +454,7 @@ const ExecutionPlanModule = {
         if (!this.currentPlan) return;
         
         try {
-            const response = await fetch(`/api/execution/plans/${this.currentPlan.id}/export`);
+            const response = await window.apiFetch(`/api/execution/plans/${this.currentPlan.id}/export`);
             const blob = await response.blob();
             
             const url = URL.createObjectURL(blob);
@@ -467,7 +467,7 @@ const ExecutionPlanModule = {
             URL.revokeObjectURL(url);
         } catch (error) {
             console.error('导出方案失败:', error);
-            alert('导出方案失败');
+            window.AppToast.notify('导出方案失败');
         }
     },
     
@@ -480,7 +480,7 @@ const ExecutionPlanModule = {
         }
         
         try {
-            const response = await fetch(`/api/execution/plans/${this.currentPlan.id}`, {
+            const response = await window.apiFetch(`/api/execution/plans/${this.currentPlan.id}`, {
                 method: 'DELETE'
             });
             
@@ -490,13 +490,13 @@ const ExecutionPlanModule = {
                 // 重置界面
                 this.createNewPlan();
                 await this.loadPlanList();
-                alert('删除成功');
+                window.AppToast.notify('删除成功');
             } else {
-                alert('删除失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('删除失败: ' + (result.message || '未知错误'));
             }
         } catch (error) {
             console.error('删除方案失败:', error);
-            alert('删除方案失败');
+            window.AppToast.notify('删除方案失败');
         }
     },
     
@@ -506,7 +506,7 @@ const ExecutionPlanModule = {
         const file = fileInput.files[0];
         
         if (!file) {
-            alert('请选择要导入的方案文件');
+            window.AppToast.notify('请选择要导入的方案文件');
             return;
         }
         
@@ -514,7 +514,7 @@ const ExecutionPlanModule = {
             const formData = new FormData();
             formData.append('file', file);
             
-            const response = await fetch('/api/execution/plans/import', {
+            const response = await window.apiFetch('/api/execution/plans/import', {
                 method: 'POST',
                 body: formData
             });
@@ -535,20 +535,20 @@ const ExecutionPlanModule = {
                 // 加载刚导入的方案
                 this.loadPlan(result.data.id);
                 
-                alert('导入成功');
+                window.AppToast.notify('导入成功');
             } else {
-                alert('导入失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('导入失败: ' + (result.message || '未知错误'));
             }
         } catch (error) {
             console.error('导入方案失败:', error);
-            alert('导入方案失败');
+            window.AppToast.notify('导入方案失败');
         }
     },
     
     // 执行方案
     runPlan: async function() {
         if (!this.currentPlan) {
-            alert('请先创建或选择一个方案');
+            window.AppToast.notify('请先创建或选择一个方案');
             return;
         }
         
@@ -564,7 +564,7 @@ const ExecutionPlanModule = {
         document.getElementById('execution-log').innerHTML = '<p class="text-muted">开始执行...</p>';
         
         try {
-            const response = await fetch(`/api/execution/plans/${this.currentPlan.id}/run`, {
+            const response = await window.apiFetch(`/api/execution/plans/${this.currentPlan.id}/run`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

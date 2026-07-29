@@ -29,7 +29,7 @@ function startInitialization() {
         
         // 检查是否至少选择了一项
         if (!initBasicData && !initHistoryData && !initIndustryData && !initSectorData && !initFundFlowData) {
-            alert('请至少选择一项初始化数据');
+            window.AppToast.notify('请至少选择一项初始化数据');
             return;
         }
         
@@ -46,7 +46,7 @@ function startInitialization() {
         console.log('初始化选项:', options);
         
         // 调用后端API启动初始化
-        fetch('/api/data/init/start', {
+        window.apiFetch('/api/data/init/start', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,16 +74,16 @@ function startInitialization() {
             } else {
                 const errorMsg = result.message || '未知错误';
                 console.error('启动初始化失败:', errorMsg);
-                alert('启动初始化失败: ' + errorMsg);
+                window.AppToast.notify('启动初始化失败: ' + errorMsg);
             }
         })
         .catch(error => {
             console.error('启动初始化时出错:', error);
-            alert('启动初始化失败: ' + error.message);
+            window.AppToast.notify('启动初始化失败: ' + error.message);
         });
     } catch (error) {
         console.error('开始初始化时出错:', error);
-        alert('启动初始化失败: ' + error.message);
+        window.AppToast.notify('启动初始化失败: ' + error.message);
     }
 }
 
@@ -106,7 +106,7 @@ function pollInitProgress() {
 async function getInitProgress(intervalId) {
     try {
         const url = '/api/data/init/progress';
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         const result = await response.json();
         
         if (result.success) {
@@ -149,20 +149,20 @@ async function cancelInitialization() {
     }
     
     try {
-        const response = await fetch('/api/data/init/cancel', {
+        const response = await window.apiFetch('/api/data/init/cancel', {
             method: 'POST'
         });
         
         const result = await response.json();
         
         if (result.success) {
-            alert('✓ 初始化已取消');
+            window.AppToast.notify('✓ 初始化已取消');
             resetInitForm();
         } else {
-            alert('取消初始化失败: ' + (result.message || '未知错误'));
+            window.AppToast.notify('取消初始化失败: ' + (result.message || '未知错误'));
         }
     } catch (error) {
-        alert('取消初始化失败: ' + error.message);
+        window.AppToast.notify('取消初始化失败: ' + error.message);
     }
 }
 
@@ -185,7 +185,7 @@ function startReinit() {
         
         console.log('发送重新初始化请求...');
         
-        fetch('/api/data/reinit', {
+        window.apiFetch('/api/data/reinit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -205,16 +205,16 @@ function startReinit() {
                 
                 pollInitProgress();
             } else {
-                alert('启动重新初始化失败: ' + (result.message || '未知错误'));
+                window.AppToast.notify('启动重新初始化失败: ' + (result.message || '未知错误'));
             }
         })
         .catch(error => {
             console.error('启动重新初始化时出错:', error);
-            alert('启动重新初始化失败: ' + error.message);
+            window.AppToast.notify('启动重新初始化失败: ' + error.message);
         });
     } catch (error) {
         console.error('开始重新初始化时出错:', error);
-        alert('启动重新初始化失败: ' + error.message);
+        window.AppToast.notify('启动重新初始化失败: ' + error.message);
     }
 }
 

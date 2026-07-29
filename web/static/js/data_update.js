@@ -42,7 +42,7 @@ async function loadLastUpdateTime() {
     try {
         console.log('加载上次更新时间...');
         
-        const response = await fetch('/api/data/update/last-update-time');
+        const response = await window.apiFetch('/api/data/update/last-update-time');
         const result = await response.json();
         
         if (result.success) {
@@ -121,7 +121,7 @@ async function startDataUpdate() {
         console.log('发送请求到后端...');
         
         // 调用后端API启动更新
-        const response = await fetch('/api/data/update/start', {
+        const response = await window.apiFetch('/api/data/update/start', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -151,11 +151,11 @@ async function startDataUpdate() {
         } else {
             const errorMsg = result.message || result.error || '未知错误';
             console.error('启动更新失败:', errorMsg);
-            alert('启动更新失败: ' + errorMsg);
+            window.AppToast.notify('启动更新失败: ' + errorMsg);
         }
     } catch (error) {
         console.error('启动更新时出错:', error);
-        alert('启动更新失败: ' + error.message);
+        window.AppToast.notify('启动更新失败: ' + error.message);
     }
 }
 
@@ -186,7 +186,7 @@ async function getUpdateProgress() {
     
     try {
         const url = `/api/data/update/progress?taskId=${updateTaskId}`;
-        const response = await fetch(url);
+        const response = await window.apiFetch(url);
         const result = await response.json();
         
         if (result.success) {
@@ -237,7 +237,7 @@ function updateProgressUI(data) {
  */
 async function cancelDataUpdate() {
     if (!updateTaskId) {
-        alert('没有正在运行的更新任务');
+        window.AppToast.notify('没有正在运行的更新任务');
         return;
     }
     
@@ -246,7 +246,7 @@ async function cancelDataUpdate() {
     }
     
     try {
-        const response = await fetch(`/api/data/update/cancel?taskId=${updateTaskId}`, {
+        const response = await window.apiFetch(`/api/data/update/cancel?taskId=${updateTaskId}`, {
             method: 'POST'
         });
         
@@ -262,12 +262,12 @@ async function cancelDataUpdate() {
             // 重置UI状态
             resetUpdateUI();
             
-            alert('✓ 数据更新已取消');
+            window.AppToast.notify('✓ 数据更新已取消');
         } else {
-            alert('取消更新失败: ' + (result.message || '未知错误'));
+            window.AppToast.notify('取消更新失败: ' + (result.message || '未知错误'));
         }
     } catch (error) {
-        alert('取消更新失败: ' + error.message);
+        window.AppToast.notify('取消更新失败: ' + error.message);
     }
 }
 
@@ -392,7 +392,7 @@ async function startRebuildExdividend() {
         console.log(`发送请求到后端，重建最近${months}个月的除权股票...`);
         
         // 调用后端API
-        const response = await fetch('/api/data/update/rebuild-recent-exdividend', {
+        const response = await window.apiFetch('/api/data/update/rebuild-recent-exdividend', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -415,7 +415,7 @@ async function startRebuildExdividend() {
         } else {
             const errorMsg = result.message || result.error || '未知错误';
             console.error('重建除权股票失败:', errorMsg);
-            alert('重建失败: ' + errorMsg);
+            window.AppToast.notify('重建失败: ' + errorMsg);
         }
     } catch (error) {
         console.error('重建除权股票时出错:', error);
@@ -427,7 +427,7 @@ async function startRebuildExdividend() {
             btn.innerHTML = '🔄 检测并重建除权股票';
         }
         
-        alert('重建失败: ' + error.message);
+        window.AppToast.notify('重建失败: ' + error.message);
     }
 }
 

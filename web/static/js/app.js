@@ -15,8 +15,10 @@ let modules = {};
 // 检查策略配置文件是否存在
 async function checkStrategyConfig() {
     try {
-        const response = await fetch('/api/strategy/has-config');
-        const result = await response.json();
+        const result = await window.AppApi.get('/api/strategy/has-config', {
+            timeout: 10000,
+            loading: false
+        });
         
         if (result.success) {
             const hasConfig = result.has_config;
@@ -38,7 +40,7 @@ async function checkStrategyConfig() {
             return hasConfig;
         }
     } catch (error) {
-        console.error('检查策略配置文件失败:', error);
+        window.AppError.handle(error, { silent: true });
     }
     return false;
 }
@@ -88,7 +90,7 @@ async function loadModules() {
         await initializeApp();
     } catch (error) {
         console.error('Failed to load modules:', error);
-        alert('加载模块失败，请刷新页面重试');
+        window.AppToast.notify('加载模块失败，请刷新页面重试');
     }
 }
 
@@ -190,15 +192,9 @@ async function triggerUpdate() {
     
     try {
         // 发起更新请求
-        const response = await fetch('/api/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ max_stocks: null })
+        const result = await window.AppApi.post('/api/update', { max_stocks: null }, {
+            loadingMessage: '正在启动数据更新...'
         });
-        
-        const result = await response.json();
         
         if (result.success) {
             // 使用WebSocket接收实时进度，无需轮询
@@ -208,11 +204,11 @@ async function triggerUpdate() {
                 modules.websocket.checkUpdateStatusBackup(progressCard);
             }
         } else {
-            alert('Update failed: ' + result.error);
+            window.AppToast.notify('Update failed: ' + result.error);
             progressCard.style.display = 'none';
         }
     } catch (error) {
-        alert('Update failed: ' + error.message);
+        window.AppError.handle(error, { fallback: `数据更新启动失败：${error.message}` });
         progressCard.style.display = 'none';
     }
 }

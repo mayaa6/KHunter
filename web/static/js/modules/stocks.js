@@ -7,7 +7,7 @@
  */
 export async function loadStats() {
     try {
-        const response = await fetch('/api/stats');
+        const response = await window.apiFetch('/api/stats');
         const result = await response.json();
         
         if (result.success) {
@@ -29,7 +29,7 @@ export async function loadMyGoldenStocks() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
         
-        const response = await fetch('/api/dashboard/my-golden-stocks', { signal: controller.signal });
+        const response = await window.apiFetch('/api/dashboard/my-golden-stocks', { signal: controller.signal });
         clearTimeout(timeoutId);
         
         if (!response.ok) {
@@ -105,7 +105,7 @@ export async function loadHotIndustries() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
         
-        const response = await fetch('/api/dashboard/hot-industries', { signal: controller.signal });
+        const response = await window.apiFetch('/api/dashboard/hot-industries', { signal: controller.signal });
         clearTimeout(timeoutId);
         
         if (!response.ok) {
@@ -179,7 +179,7 @@ export async function loadHotAreas() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
         
-        const response = await fetch('/api/dashboard/hot-areas', { signal: controller.signal });
+        const response = await window.apiFetch('/api/dashboard/hot-areas', { signal: controller.signal });
         clearTimeout(timeoutId);
         
         if (!response.ok) {
@@ -258,7 +258,7 @@ export async function loadStocks() {
         
         // 分页获取所有股票
         do {
-            const response = await fetch(`/api/stocks?page=${page}&per_page=500`);
+            const response = await window.apiFetch(`/api/stocks?page=${page}&per_page=500`);
             const result = await response.json();
             
             if (result.success) {
@@ -322,16 +322,16 @@ export function renderStocks(stocks) {
  */
 export async function viewStockDetail(code) {
     try {
-        const response = await fetch(`/api/stock/${code}`);
+        const response = await window.apiFetch(`/api/stock/${code}`);
         const result = await response.json();
         
         if (result.success) {
             showStockModal(code, result.data);
         } else {
-            alert('加载股票详情失败: ' + result.error);
+            window.AppToast.notify('加载股票详情失败: ' + result.error);
         }
     } catch (error) {
-        alert('加载股票详情失败: ' + error.message);
+        window.AppToast.notify('加载股票详情失败: ' + error.message);
     }
 }
 
@@ -379,7 +379,7 @@ export async function loadHistoryStrategyOptions() {
     
     try {
         // 使用与策略回测一致的API端点
-        const response = await fetch('/api/trading/backtest/strategies');
+        const response = await window.apiFetch('/api/trading/backtest/strategies');
         const data = await response.json();
         
         if (data.success && data.data && data.data.strategies) {
@@ -407,16 +407,16 @@ export async function loadHistoryStrategyOptions() {
  */
 export async function showIndustryStocks(industry, limit = 50) {
     try {
-        const response = await fetch(`/api/dashboard/industry-stocks?industry=${encodeURIComponent(industry)}&limit=${limit}`);
+        const response = await window.apiFetch(`/api/dashboard/industry-stocks?industry=${encodeURIComponent(industry)}&limit=${limit}`);
         const result = await response.json();
         
         if (result.success) {
             showStocksModal(`${industry}行业股票列表`, result.stocks, result.date || '');
         } else {
-            alert('加载行业股票失败: ' + result.error);
+            window.AppToast.notify('加载行业股票失败: ' + result.error);
         }
     } catch (error) {
-        alert('加载行业股票失败: ' + error.message);
+        window.AppToast.notify('加载行业股票失败: ' + error.message);
     }
 }
 
@@ -427,16 +427,16 @@ export async function showIndustryStocks(industry, limit = 50) {
  */
 export async function showAreaStocks(area, limit = 50) {
     try {
-        const response = await fetch(`/api/dashboard/area-stocks?area=${encodeURIComponent(area)}&limit=${limit}`);
+        const response = await window.apiFetch(`/api/dashboard/area-stocks?area=${encodeURIComponent(area)}&limit=${limit}`);
         const result = await response.json();
         
         if (result.success) {
             showStocksModal(`${area}板块股票列表`, result.stocks, result.date || '');
         } else {
-            alert('加载板块股票失败: ' + result.error);
+            window.AppToast.notify('加载板块股票失败: ' + result.error);
         }
     } catch (error) {
-        alert('加载板块股票失败: ' + error.message);
+        window.AppToast.notify('加载板块股票失败: ' + error.message);
     }
 }
 

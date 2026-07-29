@@ -13,16 +13,16 @@ let lastSelectionDate = null;
 export async function runSelection() {
     try {
         // 加载策略列表
-        const response = await fetch('/api/strategies');
+        const response = await window.apiFetch('/api/strategies');
         const result = await response.json();
         
         if (result.success) {
             showStrategySelectionModal(result.data);
         } else {
-            alert('加载策略列表失败: ' + result.error);
+            window.AppToast.notify('加载策略列表失败: ' + result.error);
         }
     } catch (error) {
-        alert('加载策略列表失败: ' + error.message);
+        window.AppToast.notify('加载策略列表失败: ' + error.message);
     }
 }
 
@@ -84,7 +84,7 @@ export async function confirmStrategySelection() {
     const { strategies, logic } = getSelectedStrategiesAndLogic();
     
     if (strategies.length === 0) {
-        alert('请至少选择一个策略');
+        window.AppToast.notify('请至少选择一个策略');
         return;
     }
     
@@ -174,7 +174,7 @@ export async function executeSelectionWithStrategies(strategies, logic = 'or', s
         const requestBody = { strategies: strategies, logic: logic, end_date: selectionDate };
         console.log('发送请求体:', JSON.stringify(requestBody));
         
-        const response = await fetch('/api/select', {
+        const response = await window.apiFetch('/api/select', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -359,7 +359,7 @@ export function renderIntersectionAnalysis(analysis) {
 export async function saveSelectionResults() {
     // 检查是否有可保存的数据
     if (!lastSelectionResults || !lastSelectionTime) {
-        alert('没有可保存的选股结果，请先执行选股');
+        window.AppToast.notify('没有可保存的选股结果，请先执行选股');
         return;
     }
 
@@ -392,7 +392,7 @@ export async function saveSelectionResults() {
         }
         
         // 发送保存请求
-        const response = await fetch('/api/save_selection', {
+        const response = await window.apiFetch('/api/save_selection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -418,13 +418,13 @@ export async function saveSelectionResults() {
             console.log(msg);
         } else {
             // 保存失败
-            alert('保存失败: ' + (result.error || '未知错误'));
+            window.AppToast.notify('保存失败: ' + (result.error || '未知错误'));
             btn.innerHTML = '<span class="icon">💾</span> 保存结果';
             btn.disabled = false;
         }
     } catch (error) {
         console.error('保存选股结果异常:', error);
-        alert('保存失败: ' + error.message);
+        window.AppToast.notify('保存失败: ' + error.message);
         btn.innerHTML = '<span class="icon">💾</span> 保存结果';
         btn.disabled = false;
     }
@@ -436,7 +436,7 @@ export async function saveSelectionResults() {
 export async function exportSelectionResults() {
     // 检查是否有可导出的数据
     if (!lastSelectionResults || !lastSelectionTime) {
-        alert('没有可导出的选股结果，请先执行选股');
+        window.AppToast.notify('没有可导出的选股结果，请先执行选股');
         return;
     }
     
@@ -449,7 +449,7 @@ export async function exportSelectionResults() {
     
     try {
         // 调用后端API导出Excel
-        const response = await fetch('/api/khunter/export_selection', {
+        const response = await window.apiFetch('/api/khunter/export_selection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -491,7 +491,7 @@ export async function exportSelectionResults() {
         
     } catch (error) {
         console.error('导出选股结果异常:', error);
-        alert('导出失败: ' + error.message);
+        window.AppToast.notify('导出失败: ' + error.message);
         btn.innerHTML = '<span class="icon">📥</span> 导出结果';
         btn.disabled = false;
     }
